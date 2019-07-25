@@ -33,3 +33,4 @@ void UART1::registerCallback(ser_cb_t *cb) {
 void UART1::registerCallback(SystemEventHandler *cb) {
 	//__hw_serial_cb[0].sys_cb_vect = cb;
 }
+

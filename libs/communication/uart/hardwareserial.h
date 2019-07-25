@@ -48,4 +48,5 @@ private:
 
 
 
+
 #endif // HARDWARESERIAL_H
