@@ -2,9 +2,9 @@
 #define SERIAL1_H
 #include <serial.h>
 
-class Serial1 : public Serial {
+class Serial1 : public virtual Serial {
 public:
-    Serial1(): Serial(){}
+    Serial1();
     virtual void begin(HW_UART baud) override;
 
 };

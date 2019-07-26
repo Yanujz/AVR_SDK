@@ -2,10 +2,10 @@
 #define SERIAL3_H
 #include <serial.h>
 
-class Serial3 : public Serial {
+class Serial3 : public virtual Serial {
 public:
-    Serial3(): Serial(){}
-    virtual void begin(HW_UART baud) override;
+	Serial3();
+	virtual void begin(HW_UART baud) override;
 
 };
 extern Serial3 serial3;

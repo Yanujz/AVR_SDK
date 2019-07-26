@@ -96,12 +96,12 @@ inline void puts(const char *str, volatile u8t *UCSRxA){
 
 
 
-void vfprintf(volatile u8t* __stdout, const char *fmt, va_list arg) __attribute__ ((noinline));
+extern void vfprintf(volatile u8t* __stdout, const char *fmt, va_list arg) __attribute__ ((noinline));
 
 
 
-void printf(const char* fmt, ...);
-void printf(volatile u8t* __stdout, const char* fmt, ...);
+extern void printf(const char* fmt, ...);
+extern void printf(volatile u8t* __stdout, const char* fmt, ...);
 
 
 }
