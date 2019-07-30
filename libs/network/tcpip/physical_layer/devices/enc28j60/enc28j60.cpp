@@ -1,5 +1,5 @@
 #include "enc28j60.h"
-
+/*
 Enc28j60::Enc28j60(macaddr_t &mac)
 {
 
@@ -473,6 +473,7 @@ void Enc28j60::_spi_setBuffers()
 
 }
 */
+/*
 void Enc28j60::_callback(u8t pin, void *context)
 {
 	if(context == nullptr) {
@@ -491,3 +492,4 @@ void Enc28j60::callback(u8t pin)
 
 }
 
+*/

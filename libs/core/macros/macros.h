@@ -146,15 +146,18 @@ constexpr unsigned int toABS(int x){
 
 
 #define regBitToValue(x) (1 << toU8(x))
-#define bitValue(x) (1 << x)
+//#define bitValue(x) (1 << x)
+constexpr u8t bitValue(u8t x){
+	return (1 << x);
+}
 
 #define valueFromMask(var, mask) (var & mask)
 
 
 
-#define CALCULATE_PWM_TICKS(freq) (1.0/freq)/(1.0/F_CPU)
-#define CALCULATE_DUTY_16BIT(freq, duty) (CALCULATE_PWM_TICKS(freq)-(CALCULATE_PWM_TICKS(freq)*((float)duty/100)))
-#define CALCULATE_DUTY_8BIT(duty) ((-2.55*duty) + 255)
+//#define CALCULATE_PWM_TICKS(freq) (1.0/freq)/(1.0/F_CPU)
+//#define CALCULATE_DUTY_16BIT(freq, duty) (CALCULATE_PWM_TICKS(freq)-(CALCULATE_PWM_TICKS(freq)*((float)duty/100)))
+//#define CALCULATE_DUTY_8BIT(duty) ((-2.55*duty) + 255)
 
 constexpr u16t calcPwmTicks(size_t freq){
 	return F_CPU/freq;
@@ -177,4 +180,7 @@ constexpr u8t calcDuty8bit(u8t duty){
 #define _UBRRxH(x)  (*(x  + 5))
 #define _UDRx(x)   (*(x  + 6))
 
+//---- SPI MACROS ----//
+#define _SPSRx(x) (*(x  + 1))
+#define _SPDRx(x) (*(x  + 2))
 #endif

@@ -1,4 +1,4 @@
-#include "portmanager.h"
+//#include "portmanager.h"
 
 //#define _DDRx(x) (*(x  + 1))
 //#define _PORTx(x) (*(x  + 2))

@@ -1,17 +1,6 @@
 #ifndef PINS_H
 #define PINS_H
-#include <stddef.h>
-#include <macros.h>
-#include <avr/io.h>
-#include <util/delay.h>
-
-#if defined(__AVR_ATmega640__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
-#include <atmega2560.h>
-#elif defined(__AVR_ATmega48p__) ||  defined(__AVR_ATmega88P__) || defined(__AVR_ATmega328P__)
-#include <atmega328p.h>
-#else
-#include <gpiodef.h>
-#endif
+#include <core.h>
 
 // Must pass PINx
 #define _DDRx(x) (*(x  + 1))
@@ -199,7 +188,7 @@ inline uint16_t analogRead(PIN_ADC pin, _ADMUX vRef = AVCC, _ADCSRA_PRESCALER pr
 
 }
 
-
+// ATTENTION not sure if needed
 inline void changeDuty(PIN pin, u8t duty){
 	u8t timer = varToTimer(pin);
 	if( timer == NO_TIMER){

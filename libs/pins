@@ -1,8 +1,0 @@
-
-build/pins.o:     file format elf32-avr
-
-
-
-offset = (offset & sizeof(arr)/sizeof(decltype(arr[0]))) +1
-
-offset = (offset % sizeof(arr)/sizeof(decltype(arr[0]))) +1

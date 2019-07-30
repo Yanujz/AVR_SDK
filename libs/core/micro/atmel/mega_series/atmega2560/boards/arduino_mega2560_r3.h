@@ -1,6 +1,6 @@
 #pragma once
-#include <gpiodef.h>
-
+#include <mega_common.h>
+#include <avr/iom2560.h>
 #define PINx(x) (x << 0)
 #define OR100 (1 << 5)
 #define LETTERx(x) (x << 6)
@@ -37,13 +37,6 @@
 #define _PINL (OR100 | 0x09)
 
 
-//#define pinToPinx(x) (pgm_read_word(&__flashMappedPort[x]) & OR100 ? &_SFR_MEM8(0x100 | pgm_read_word(&__flashMappedPort[x]) & 0x1F) :  &_SFR_IO8(pgm_read_word(&__flashMappedPort[x]) & 0x1F))
-
-//#define varToPinx(x) (toU16(x) & OR100 ? &_SFR_MEM8(0x100 | (toU16(x) & 0x1F)) :  &_SFR_IO8(toU16(x) & 0x1F))
-//#define varToLetter(x) (((toU16(x) >> 6) & 0x03))
-//#define varToRegBit(x) ((toU16(x) >> 8) & 0x07)
-//#define varToPWMGroup(x) ((toU16(x) >> 11) & 0x01)
-//#define varToTimer(x) (((toU16(x) >> 12) & 0x07))
 
 
 
@@ -65,6 +58,9 @@ enum class PIN_ADC : u8t {
 	A14,
 	A15
 };
+
+
+
 
 /*
 ╔════╦════╦════╦════╦═══════════╦════╦═══╦═══╦════╦════╦═══════╦═══╦═══╦═══╦═══╦═══╗
@@ -149,21 +145,10 @@ enum class PIN : int
 	A15  = LETTERx(NO_LETTER) | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD7) |  PINx(_PINK) //A15	69	| ADC15/PCINT23
 };
 
-enum class HW_UART : int{
-	BAUD2400    = 416,
-	BAUD4800    = 207,
-	BAUD9600    = 103,
-	BAUD14400   =	 68,
-	BAUD19200   =		51,
-	BAUD28800   =  34,
-	BAUD38400   =  25,
-	BAUD57600   =  16,
-	BAUD76800   =  12,
-	BAUD115200  =   8,
-	BAUD250000  =   3,
-	BAUD500000  =   1,
-	BAUD1000000 =   0
-};
+#define SPI0_DEFAULT_MISO PIN::IO50
+#define SPI0_DEFAULT_MOSI PIN::IO51
+#define SPI0_DEFAULT_SCK PIN::IO52
+#define SPI0_DEFAULT_SS PIN::IO53
 
 constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0, 0x90, 0xA0, 0x120};
 constexpr u8t PROGMEM __hw_int_mappedPin[8] = {21, 20, 19, 18, 2, 3, 255, 255};
@@ -184,9 +169,3 @@ constexpr u8t varToPWMGroup(PIN x){
 constexpr u8t varToTimer(PIN x){
 	return (((toU16(x) >> 12) & 0x07));
 }
-
-
-//#ifdef __cplusplus
-//}
-//#endif
-

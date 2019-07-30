@@ -1,6 +1,11 @@
 #include "asyncserial3.h"
-
+#define __SERIAL3_SUPPORT__
+#if defined(__AVR_ATmega48p__) ||  defined(__AVR_ATmega88P__) || defined(__AVR_ATmega328P__)
+#undef __SERIAL3_SUPPORT__
+#endif
+#if defined(__SERIAL3_SUPPORT__)
 AsyncSerial3 asyncSerial3;
+AsyncSerial::HW_UART_INT __hw_uart3_int;
 
 
 AsyncSerial3::AsyncSerial3() : AsyncSerial(), Serial3(){
@@ -9,34 +14,36 @@ AsyncSerial3::AsyncSerial3() : AsyncSerial(), Serial3(){
 
 void AsyncSerial3::begin(HW_UART baud)
 {
-
-}
-
-void AsyncSerial3::begin(HW_UART baud, bool setRxIrq, bool setEcho){
 	Serial3::begin(baud);
-	AsyncSerial::init(setRxIrq, setEcho, 3);
+	AsyncSerial::init();
 }
 
 void AsyncSerial3::registerCallback(ser_cb_t *cb){
-	__hw_serial_cb[3].user_cb_vect = cb;
+	__hw_uart3_int.user_cb_vect = cb;
 }
 
 void AsyncSerial3::registerCallback(SystemEventHandler *cb){
-	__hw_serial_cb[3].sys_cb_vect = cb;
+	__hw_uart3_int.contex = cb;
 }
 
 
 
 ISR(USART3_RX_vect){
 	char temp = UDR3;
-	//__hw_serial[0]->insertData(temp);
+	asyncSerial3.push_rx_fifo(temp);
 	if(asyncSerial3.echoIsEnabled()){
 		UDR3 = temp;
 	}
-	if(__hw_serial_cb[3].user_cb_vect != nullptr){
-		((void(*)())__hw_serial_cb[3].user_cb_vect)();
+	if(__hw_uart3_int.user_cb_vect != nullptr){
+		__hw_uart3_int.user_cb_vect();
 	}
-	else if(__hw_serial_cb[3].sys_cb_vect != nullptr) {
-		SystemEventHandler::call_int_callback(__hw_serial_cb[3].sys_cb_vect);
+	else if(__hw_uart3_int.contex != nullptr) {
+		SystemEventHandler::call_int_callback(__hw_uart3_int.contex, temp);
 	}
 }
+ISR(USART3_TX_vect){
+	if(asyncSerial3.is_tx_fifo_empty() == false) {
+		UDR3 = asyncSerial3.pop_tx_fifo();
+	}
+}
+#endif

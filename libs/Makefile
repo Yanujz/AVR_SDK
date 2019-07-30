@@ -20,7 +20,8 @@ C_SRCS := $(shell find ./ -type f -regex ".*\.c")
 C_OBJS  = $(C_SRCS:.c=.o)
 
 INCLUDE_DIR := -I /usr/lib/avr/include -I ../standardCpp \
-	$(addprefix -I ,$(shell find ./ -name  '*.h' -exec dirname {} \;)) 
+	$(addprefix -I ,$(shell find ./ -name  '*.h' -exec dirname {} \;)) \
+	$(addprefix -I ,$(shell find ./ -name  '*.hpp' -exec dirname {} \;))
 #
 CXX_FLAGS =  $(INCLUDE_DIR) -Os -D__COMPILE__ -DBAUD=9600 -DF_CPU=$(F_CPU) -std=c++17 -mmcu=$(MICRO) -nostartfiles -nostdlib -nodefaultlibs -Wmain -Wextra  -Wno-maybe-uninitialized \
 			-fdata-sections -ffunction-sections -funsigned-char -funsigned-bitfields  #-D__FLOAT_SUPPORT__

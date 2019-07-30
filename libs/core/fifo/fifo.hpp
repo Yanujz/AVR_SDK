@@ -30,10 +30,10 @@ public:
 		}
 
 		if (goBack) {
-				if(--_write_offset < 0){
-					_write_offset = LEN - 1;
-				}
-				if (false == overwrite) return;
+			if(--_write_offset < 0){
+				_write_offset = LEN - 1;
+			}
+			if (false == overwrite) return;
 		}
 
 		arr[_write_offset] = value;
@@ -50,7 +50,16 @@ public:
 		}
 		return false;
 	}
-
+	void setOverwrite(bool value){
+		overwrite = value;
+	}
+	void reset(){
+		_read_offset = -1;
+		_write_offset = -1;
+	}
+	int getUnreadElement(){
+		return toABS(_write_offset - _read_offset);
+	}
 private:
 	bool overwrite;
 	int _read_offset;

@@ -1,7 +1,8 @@
 #ifndef ADCCOMPARATOR_H
 #define ADCCOMPARATOR_H
 //#include <macros.h>
-#include <portmanager.h>
+//#include <portmanager.h>
+#include <pins.h>
 
 
 /**

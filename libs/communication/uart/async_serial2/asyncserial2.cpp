@@ -1,6 +1,12 @@
 #include "asyncserial2.h"
 
+#define __SERIAL2_SUPPORT__
+#if defined(__AVR_ATmega48p__) ||  defined(__AVR_ATmega88P__) || defined(__AVR_ATmega328P__)
+#undef __SERIAL2_SUPPORT__
+#endif
+#if defined(__SERIAL2_SUPPORT__)
 AsyncSerial2 asyncSerial2;
+AsyncSerial::HW_UART_INT __hw_uart2_int;
 
 
 AsyncSerial2::AsyncSerial2() : AsyncSerial(), Serial2(){
@@ -9,35 +15,37 @@ AsyncSerial2::AsyncSerial2() : AsyncSerial(), Serial2(){
 
 void AsyncSerial2::begin(HW_UART baud)
 {
-
-}
-
-void AsyncSerial2::begin(HW_UART baud, bool setRxIrq, bool setEcho){
 	Serial2::begin(baud);
-	AsyncSerial::init(setRxIrq, setEcho, 2);
+	AsyncSerial::init();
 }
 
 void AsyncSerial2::registerCallback(ser_cb_t *cb){
-	__hw_serial_cb[2].user_cb_vect = cb;
+	__hw_uart2_int.user_cb_vect = cb;
 }
 
 void AsyncSerial2::registerCallback(SystemEventHandler *cb){
-	__hw_serial_cb[2].sys_cb_vect = cb;
+	__hw_uart2_int.contex = cb;
 }
 
 
 
 ISR(USART2_RX_vect){
 	char temp = UDR2;
-	//__hw_serial[0]->insertData(temp);
+	asyncSerial2.push_rx_fifo(temp);
 	if(asyncSerial2.echoIsEnabled()){
 		UDR2 = temp;
 	}
-	if(__hw_serial_cb[2].user_cb_vect != nullptr){
-		((void(*)())__hw_serial_cb[2].user_cb_vect)();
+	if(__hw_uart2_int.user_cb_vect != nullptr){
+		__hw_uart2_int.user_cb_vect();
 	}
-	else if(__hw_serial_cb[2].sys_cb_vect != nullptr) {
-		SystemEventHandler::call_int_callback(__hw_serial_cb[2].sys_cb_vect);
+	else if(__hw_uart2_int.contex != nullptr) {
+		SystemEventHandler::call_int_callback(__hw_uart2_int.contex, temp);
+	}
+}
+ISR(USART2_TX_vect){
+	if(asyncSerial2.is_tx_fifo_empty() == false) {
+		UDR2 = asyncSerial2.pop_tx_fifo();
 	}
 }
 
+#endif

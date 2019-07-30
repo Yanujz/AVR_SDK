@@ -4,11 +4,16 @@
 class SystemEventHandler
 {
 public:
+	struct SYS_EVENT
+	{
+		SystemEventHandler* contex;
+	};
+
 	SystemEventHandler();
-	static void call_int_callback(SystemEventHandler *context, u8t pin = 0);
-	virtual void callback(u8t pin) = 0;
-	//virtual void callback() = 0;
+	static void call_int_callback(SystemEventHandler *context, u8t byte = 0);
+	virtual void callback(u8t byte) = 0;
 protected:
+
 };
 
 

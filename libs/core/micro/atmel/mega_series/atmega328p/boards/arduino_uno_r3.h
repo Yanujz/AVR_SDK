@@ -1,5 +1,5 @@
 #pragma once
-#include <gpiodef.h>
+#include <mega_common.h>
 
 #define PINx(x) (x << 0)
 #define BIT(x) (x << 4)
@@ -22,16 +22,6 @@
 #define _PINC 0x06
 #define _PIND 0x09
 #define NO_PINX 0xF
-
-
-
-//#define varToPinx(x) (&_SFR_IO8(toU16(x) & 0xF))
-//#define varToRegBit(x) ((toU16(x) >> 4) & 0x07)
-//#define varToPWMGroup(x) ((toU16(x) >> 7) & 0x01)
-//#define varToTimer(x) (((toU16(x) >> 8) & 0x07))
-//#define varToLetter(x) (((toU16(x) >> 10) & 0x03))
-
-
 
 
 enum class PIN_ADC : u8t {
@@ -75,21 +65,6 @@ enum class PIN : int
 	A5 	 = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD5) |  PINx(_PINC), //19 PCINT13 - SCK
 };
 
-enum class HW_UART : int {
-	BAUD2400    = 416,
-	BAUD4800    = 207,
-	BAUD9600    = 103,
-	BAUD14400   =	 68,
-	BAUD19200   =		51,
-	BAUD28800   =  34,
-	BAUD38400   =  25,
-	BAUD57600   =  16,
-	BAUD76800   =  12,
-	BAUD115200  =   8,
-	BAUD250000  =   3,
-	BAUD500000  =   1,
-	BAUD1000000 =   0
-};
 
 constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0};
 constexpr u8t PROGMEM __hw_int_mappedPin[] = {2, 3};

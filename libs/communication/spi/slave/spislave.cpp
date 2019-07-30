@@ -1,5 +1,5 @@
 #include "spislave.h"
-
+/*
 SlaveSPI *SlaveSPI::getInstance(slaveSPI_t data)
 {
 	static SlaveSPI *instance = 0;
@@ -7,7 +7,7 @@ SlaveSPI *SlaveSPI::getInstance(slaveSPI_t data)
 		instance = new SlaveSPI(data);
 	}
 	return instance;
-}
+}*/
 
 
 
@@ -154,11 +154,11 @@ bool SlaveSPI::bufferIsReadable()
 
 //-------ISR------/
 ISR(SPI_STC_vect){
-	SlaveSPI *slave = SlaveSPI::getInstance();
-	volatile uint8_t a = SPDR;
+//	///SlaveSPI *slave = SlaveSPI::getInstance();
+	//volatile uint8_t a = SPDR;
 	//SPDR = 6;
-	slave->insertData(a);
-	slave->callback(a);
+	////slave->insertData(a);
+	////slave->callback(a);
 	//Serial *serial0 = SerialManager::getInstance(SERIAL0);
 	//serial0->printf("ISR called data : %d\r\n",a);
 	//if(a == 0xAA){

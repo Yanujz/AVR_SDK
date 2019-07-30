@@ -34,7 +34,7 @@ MasterSPI::MasterSPI(masterSPI_t data, mSPIsetting_t settings)
 				enable();
 
 }*/
-
+/*
 MasterSPI::MasterSPI()
 {
 
@@ -126,7 +126,7 @@ void MasterSPI::enableSlave(uint8_t slave)
 	if(slaveIsValid(slave) == false){
 		return;
 	}
-	_self.SS[slave].off();
+	//_self.SS[slave].off();
 }
 
 void MasterSPI::disableSlave(uint8_t slave)
@@ -134,7 +134,7 @@ void MasterSPI::disableSlave(uint8_t slave)
 	if(slaveIsValid(slave) == false){
 		return;
 	}
-	_self.SS[slave].on();
+	//_self.SS[slave].on();
 }
 
 
@@ -200,10 +200,10 @@ u8t MasterSPI::transfer(u8t data)
 
 bool MasterSPI::slaveIsValid(size_t slave)
 {
-	if((slave+1) <= _self.SS.size()){
-		return true;
-	}
-	return false;
+	//if((slave+1) <= _self.SS.size()){
+	//	return true;
+	//}
+	//return false;
 }
 
 bool MasterSPI::isInitilizedSPI()
@@ -216,5 +216,54 @@ bool MasterSPI::isInitilizedSPI()
 
 u8t MasterSPI::getSlavePin(u8t index)
 {
-	return _self.SS[index].getPinNumber();
+	//return _self.SS[index].getPinNumber();
 }
+*/
+
+
+
+MasterSPI::MasterSPI()
+{
+
+}
+
+void MasterSPI::init(u16t cfg, PIN miso, PIN mosi, PIN sck, PIN ss){
+	pinMode(miso, INPUT);
+	pinMode(mosi, OUTPUT);
+	pinMode(sck, OUTPUT);
+	pinMode(ss, OUTPUT);
+
+	*SPCRx = bitValue(SPE) | bitValue(MSTR) | LO(cfg);
+	_SPSRx(SPCRx) = HI(cfg);
+}
+
+void MasterSPI::end()
+{
+	*SPCRx &= ~bitValue(SPE);
+}
+
+u8t MasterSPI::transfer(u8t data)
+{
+	_SPDRx(SPCRx) = data;												//Load data into the buffer
+	//while( !(SPSR & (1<<SPIF) ));					//Wait until transmission complete
+	loop_until_bit_is_clear(_SPSRx(SPCRx), bitValue(SPIF));
+	return _SPDRx(SPCRx);
+}
+
+void MasterSPI::transfer(u8t *dst, u8t *src, int size)
+{
+	while (size--) {
+		*src++ = transfer(*dst++);
+	}
+}
+
+
+
+void MasterSPI::enableSlave(PIN slave, bool enable)
+{
+	if(enable){
+		digitalClr(slave);
+	}
+	digitalSet(slave);
+}
+

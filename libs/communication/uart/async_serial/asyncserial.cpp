@@ -1,8 +1,13 @@
 #include "asyncserial.h"
-//AsyncSerial* __hw_serial[4] = {nullptr, nullptr, nullptr, nullptr};
-__HW_INT_ISR __hw_serial_cb[4] = {nullptr, nullptr, nullptr, nullptr};
+
+//__HW_INT_ISR __hw_serial_cb[4] = {nullptr, nullptr, nullptr, nullptr};
 
 AsyncSerial::AsyncSerial() : Serial(){}
+
+void AsyncSerial::startAsyncSend()
+{
+	_UDRx(UCSRxA) = tx_fifo.pop();
+}
 
 void AsyncSerial::push_rx_fifo(u8t value)
 {
@@ -14,17 +19,30 @@ u8t AsyncSerial::pop_rx_fifo()
 	return rx_fifo.pop();
 }
 
+void AsyncSerial::reset_rx_fifo()
+{
+	rx_fifo.reset();
+}
+
+int AsyncSerial::get_rx_fifo_unread_element()
+{
+	return rx_fifo.getUnreadElement();
+}
+
 bool AsyncSerial::is_rx_fifo_empty()
 {
 	return rx_fifo.isEmpty();
 }
 
-void AsyncSerial::push_tx_fifo(u8t* value, int size)
+void AsyncSerial::push_tx_fifo(u8t* value, int size, bool startOnFinish)
 {
 	while (size--) {
 		tx_fifo.push(*value++);
 	}
-	_UDRx(UCSRxA) = tx_fifo.pop();
+	if(startOnFinish){
+		_UDRx(UCSRxA) = tx_fifo.pop();
+	}
+
 }
 
 u8t AsyncSerial::pop_tx_fifo()
@@ -32,20 +50,21 @@ u8t AsyncSerial::pop_tx_fifo()
 	return tx_fifo.pop();
 }
 
+void AsyncSerial::reset_tx_fifo()
+{
+	tx_fifo.reset();
+}
+
 bool AsyncSerial::is_tx_fifo_empty()
 {
 	return tx_fifo.isEmpty();
 }
 
-void AsyncSerial::setRxISRCallBack(bool state)
+void AsyncSerial::enable_tx_rx_isr()
 {
-	if(state) {
-		_UCSRxB(UCSRxA) |= (1 << RXCIE0);
-		_UCSRxB(UCSRxA) |= (1 << TXCIE0);
-		sei();
-		return;
-	}
-	_UCSRxB(UCSRxA) &= ~(1 << RXCIE0);
+	_UCSRxB(UCSRxA) |= bitValue(RXCIE0);
+	_UCSRxB(UCSRxA) |= bitValue(TXCIE0);
+	sei();
 }
 
 void AsyncSerial::setEchoServer(bool state)
@@ -62,11 +81,6 @@ bool AsyncSerial::echoIsEnabled()
 }
 
 
-void AsyncSerial::init(bool setRxIrq, bool setEcho, u8t index){
-	setRxISRCallBack(setRxIrq);
-	setEchoServer(setEcho);
-
-	__hw_serial_cb[index].user_cb_vect = nullptr;
-	__hw_serial_cb[index].sys_cb_vect = nullptr;
-
+void AsyncSerial::init(){
+	enable_tx_rx_isr();
 }

@@ -6,17 +6,17 @@ typedef void spi_cb_t(uint8_t data);
 
 struct slaveSPI_t
 {
-    slaveSPI_t (volatile uint8_t *pinx = nullptr, Pin *miso = nullptr, Pin *mosi = nullptr, Pin *sck = nullptr,Pin *ss = nullptr){
-        if(pinx != nullptr){
-            PINx    = pinx;
-            DDRx    = pinx + 1;
-            PORTx   = pinx + 2;
-        }
-        MISO    = miso	== nullptr ? 0xFF : miso->getRegisterBit();
-        MOSI    = mosi	== nullptr ? 0xFF : mosi->getRegisterBit();
-        SCK     = sck	== nullptr ? 0xFF : sck->getRegisterBit();
-        SS      = ss	== nullptr ? 0xFF : ss->getRegisterBit();
-    }
+				//slaveSPI_t (volatile uint8_t *pinx = nullptr, Pin *miso = nullptr, Pin *mosi = nullptr, Pin *sck = nullptr,Pin *ss = nullptr){
+				//    if(pinx != nullptr){
+				//        PINx    = pinx;
+				//        DDRx    = pinx + 1;
+				//        PORTx   = pinx + 2;
+				//    }
+				//    MISO    = miso	== nullptr ? 0xFF : miso->getRegisterBit();
+				//    MOSI    = mosi	== nullptr ? 0xFF : mosi->getRegisterBit();
+				//    SCK     = sck	== nullptr ? 0xFF : sck->getRegisterBit();
+				//    SS      = ss	== nullptr ? 0xFF : ss->getRegisterBit();
+				//}
     volatile uint8_t *PINx;
     volatile uint8_t *DDRx;
     volatile uint8_t *PORTx;
@@ -32,7 +32,7 @@ class SlaveSPI
 {
 public:
     //-----------------METHODS-----------------//
-    static SlaveSPI* getInstance(slaveSPI_t data = nullptr);
+				//static SlaveSPI* getInstance(slaveSPI_t data = nullptr);
 
     void setISR(bool value = false);
 

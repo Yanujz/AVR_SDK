@@ -13,6 +13,12 @@ void Serial::init(HW_UART baud)
 	//UCSR0A = (1<<U2X0); // Clock multiplier
 }
 
+void Serial::end()
+{
+	flush();
+	_UCSRxB(UCSRxA) &= ~(bitValue(RXEN0) | bitValue(TXEN0) | bitValue(RXCIE0) |	bitValue(TXCIE0));
+}
+
 void Serial::printf(const char *fmt, ...)
 {
 	va_list arg;
@@ -68,8 +74,8 @@ char Serial::receive()
 {
 	return yanujz::getc(UCSRxA);
 }
-void Serial::clear()
-{
-	yanujz::puts("\e[1;1H\e[2J", UCSRxA);
-}
+//void Serial::clear()
+//{
+//	yanujz::puts("\e[1;1H\e[2J", UCSRxA);
+//}
 

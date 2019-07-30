@@ -5,7 +5,7 @@ SystemEventHandler::SystemEventHandler()
 
 }
 
-void SystemEventHandler::call_int_callback(SystemEventHandler *context, u8t pin)
+void SystemEventHandler::call_int_callback(SystemEventHandler *context, u8t byte)
 {
-	context->callback(pin);
+	context->callback(byte);
 }

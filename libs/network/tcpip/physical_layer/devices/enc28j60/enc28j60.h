@@ -5,8 +5,9 @@
 #include <macros.h>
 #include <net_utils.h>
 //#include <serial.h>
-#include <interrupt.h>
+//#include <interrupt.h>
 #include <functional>
+#include <systemevent.h>
 ///@file
 
 
@@ -709,7 +710,7 @@ enum ENC28J60_INT: u8t{
 	DMAIF,
 	PKTIF
 };
-
+/*
 typedef void enc_cb_t(ENC28J60_INT type);
 class Enc28j60 : public SystemEventHandler
 {
@@ -807,6 +808,7 @@ private:
 	//Serial *serial;
 
 };
+*/
 #endif
 
 

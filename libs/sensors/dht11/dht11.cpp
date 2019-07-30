@@ -1,5 +1,5 @@
 #include "dht11.h"
-
+/*
 
 Dht11::Dht11(Pin pin){
     self.pin = pin;
@@ -47,7 +47,7 @@ void Dht11::getData()
         {
             retries = 0;
             prev = Timer::now();
-            /* First there is always a 50µs low period */
+												// First there is always a 50µs low period
             while(!self.pin.digitalRead())
             {
                 //_delay_us(2);
@@ -61,8 +61,8 @@ void Dht11::getData()
 
             retries = 0;
 
-            /* Then the data signal is sent. 26 to 28µs (ideally)
-                indicate a low bit, and around 70µs a high bit */
+												// Then the data signal is sent. 26 to 28µs (ideally)
+												//    indicate a low bit, and around 70µs a high bit
             prev = Timer::now();
             while(self.pin.digitalRead()){
                 //_delay_us(2);
@@ -74,9 +74,9 @@ void Dht11::getData()
                 }
             }
 												//serial1->dbg("T high %d\r\n",now);
-            /* Store the value now so that the whole checking doesn't
-                move the TCNT0 forward by too much to make the data look
-                bad */
+												// Store the value now so that the whole checking doesn't
+												//    move the TCNT0 forward by too much to make the data look
+												//    bad
 
             if (now >= 20 && retries <= now){
                 bitClear(buffer[i],j);
@@ -161,7 +161,7 @@ bool Dht11::checkCrc()
     }
     return false;
 }
-
+*/
 
 
 

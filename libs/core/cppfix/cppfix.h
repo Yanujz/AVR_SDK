@@ -1,4 +1,3 @@
-
 #ifndef CPPFIX_H
 #define CPPFIX_H
 #include <stdlib.h>
