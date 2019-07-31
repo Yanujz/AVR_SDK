@@ -1,7 +1,6 @@
-#ifndef SERIAL0_H
-#define SERIAL0_H
+#pragma once
 #include <serial.h>
-
+#if defined(__SERIAL0_SUPPORT__)
 class Serial0 : public virtual Serial {
 public:
 	Serial0();
@@ -9,4 +8,4 @@ public:
 
 };
 extern Serial0 serial0;
-#endif // SERIAL0_H
+#endif // __SERIAL0_SUPPORT__

@@ -1,11 +1,6 @@
-#ifndef SERIAL3_H
-#define SERIAL3_H
+#pragma once
 #include <serial.h>
 
-#define __SERIAL3_SUPPORT__
-#if defined(__AVR_ATmega48p__) ||  defined(__AVR_ATmega88P__) || defined(__AVR_ATmega328P__)
-#undef __SERIAL3_SUPPORT__
-#endif
 #if defined(__SERIAL3_SUPPORT__)
 class Serial3 : public virtual Serial {
 public:
@@ -13,6 +8,6 @@ public:
 	virtual void begin(HW_UART baud) override;
 };
 extern Serial3 serial3;
-#endif
+#endif //__SERIAL3_SUPPORT__
 
-#endif // SERIAL3_H
+

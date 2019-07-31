@@ -1,8 +1,7 @@
-#ifndef ASYNCSERIAL0_H
-#define ASYNCSERIAL0_H
+#pragma once
 #include <asyncserial.h>
 #include <serial0.h>
-
+#if defined(__SERIAL0_SUPPORT__)
 class AsyncSerial0 : public Serial0, public AsyncSerial
 {
 public:
@@ -12,5 +11,5 @@ public:
 	virtual void registerCallback(SystemEventHandler* cb = nullptr) override;
 };
 extern AsyncSerial0 asyncSerial0;
-#endif // ASYNCSERIAL0_H
+#endif // __SERIAL0_SUPPORT__
 

@@ -4,6 +4,11 @@ AsyncMasterSPI::AsyncMasterSPI() : MasterSPI(){
 
 }
 
+void AsyncMasterSPI::startAsyncTransfer()
+{
+	u8t dummy = transfer(pop_tx_fifo());
+}
+
 void AsyncMasterSPI::push_rx_fifo(u8t value)
 {
 	rx_fifo.push(value);

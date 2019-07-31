@@ -1,15 +1,14 @@
 #pragma once
-#include <spimaster.h>
-
+#include <spislave.h>
 #if defined(__SPI0_SUPPORT__)
-class MasterSPI0 : public virtual MasterSPI
+class SlaveSPI0 : public virtual SlaveSPI
 {
 public:
-	MasterSPI0();
+	SlaveSPI0();
 	virtual void begin(SPI_MODE mode = MODE_0,
 																				SPI_CLKSEL clock = FOSC_BY_128,
 																				SPI_DORD dataOrder = MSB_FIRST) override;
+	virtual bool isAvailable() override;
 };
-
-extern 	MasterSPI0 masterSPI0;
-#endif //__SPI0_SUPPORT__
+extern SlaveSPI0 slaveSPI0;
+#endif // __SPI0_SUPPORT__

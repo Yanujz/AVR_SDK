@@ -1,4 +1,5 @@
 #include "asyncserial0.h"
+#if defined(__SERIAL0_SUPPORT__)
 AsyncSerial0 asyncSerial0;
 AsyncSerial::HW_UART_INT __hw_uart0_int;
 
@@ -48,3 +49,4 @@ ISR(USART_TX_vect){
 		UDR0 = asyncSerial0.pop_tx_fifo();
 	}
 }
+#endif

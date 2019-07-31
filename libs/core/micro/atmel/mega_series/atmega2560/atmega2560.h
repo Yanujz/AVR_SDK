@@ -1,61 +1,7 @@
 #pragma once
 #include <mega_common.h>
-#include <avr/iom2560.h>
-#define PINx(x) (x << 0)
-#define OR100 (1 << 5)
-#define LETTERx(x) (x << 6)
-#define BIT(x) (x << 8)
-#define PWM_GROUP(x) (x << 11)
-#define TIMERx(x) (x << 12)
-
-#define TIMER_0 0x00
-#define TIMER_1 0x01
-#define TIMER_2 0x02
-#define TIMER_3 0x03
-#define TIMER_4 0x04
-#define TIMER_5 0x05
-#define NO_TIMER 0x07
-
-#define LETTER_A 0x00
-#define LETTER_B 0x01
-#define LETTER_C 0x02
-#define NO_LETTER 0x03
-
-#define PWM8BIT 0
-#define PWM16BIT 1
-
-#define _PINA 0x00
-#define _PINB 0x03
-#define _PINC 0x06
-#define _PIND 0x09
-#define _PINE 0x0C
-#define _PINF 0x0F
-#define _PING 0x12
-#define _PINH (OR100 | 0x00)
-#define _PINJ (OR100 | 0x03)
-#define _PINK (OR100 | 0x06)
-#define _PINL (OR100 | 0x09)
-
-
-enum class PIN_ADC : u8t {
-	A0,
-	A1,
-	A2,
-	A3,
-	A4,
-	A5,
-	A6,
-	A7,
-	A8,
-	A9,
-	A10,
-	A11,
-	A12,
-	A13,
-	A14,
-	A15
-};
-
+#include <atmega2560_common.h>
+#include <atmega2560_common_define.h>
 
 /*
 ╔════╦════╦════╦════╦═══════════╦════╦═══╦═══╦════╦════╦═══════╦═══╦═══╦═══╦═══╦═══╗
@@ -160,23 +106,6 @@ enum class PIN : int
 #define SPI0_DEFAULT_MISO PIN::IO_PB3
 
 
-constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0, 0x90, 0xA0, 0x120};
+//constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0, 0x90, 0xA0, 0x120};
+//TODO convert to u16t and put correct IO
 constexpr u8t PROGMEM __hw_int_mappedPin[8] = {21, 20, 19, 18, 2, 3, 255, 255};
-
-
-constexpr volatile u8t* varToPinx(PIN x){
-	return (toU16(x) & OR100 ? &_SFR_MEM8(0x100 | (toU16(x) & 0x1F)) :  &_SFR_IO8(toU16(x) & 0x1F));
-}
-constexpr u8t varToLetter(PIN x){
-	return (((toU16(x) >> 6) & 0x03));
-}
-constexpr u8t varToRegBit(PIN x){
-	return	((toU16(x) >> 8) & 0x07);
-}
-constexpr u8t varToPWMGroup(PIN x){
-	return ((toU16(x) >> 11) & 0x01);
-}
-constexpr u8t varToTimer(PIN x){
-	return (((toU16(x) >> 12) & 0x07));
-}
-

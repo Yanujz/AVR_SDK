@@ -4,11 +4,6 @@
 #include <fifo.hpp>
 #include <systemevent.h>
 
-typedef void spi_cb_t();
-struct __HW_SPI_INT : SystemEventHandler::SYS_EVENT
-{
-	spi_cb_t* user_cb_t;
-};
 
 class AsyncMasterSPI : public virtual MasterSPI
 {

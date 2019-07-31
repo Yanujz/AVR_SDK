@@ -1,6 +1,7 @@
 #ifndef SPISLAVE_H
 #define SPISLAVE_H
 #include "spi.h"
+/*
 ///@file
 typedef void spi_cb_t(uint8_t data);
 
@@ -63,6 +64,23 @@ private:
     uint8_t *_read;
     uint8_t *_write;
     bool bufferReadable;
+};
+*/
+
+class SlaveSPI
+{
+public:
+	virtual void begin(SPI_MODE mode = MODE_0,
+																				SPI_CLKSEL clock = FOSC_BY_128,
+																				SPI_DORD dataOrder = MSB_FIRST) = 0;
+	void end();
+	u8t receive();
+protected:
+	SlaveSPI() {}
+	void init(u16t cfg, PIN miso, PIN mosi, PIN sck, PIN ss);
+	virtual bool isAvailable() = 0;
+
+	volatile u8t* SPCRx;
 };
 
 #endif // SPISLAVE_H

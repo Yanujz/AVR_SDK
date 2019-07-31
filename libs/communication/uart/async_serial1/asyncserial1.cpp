@@ -1,8 +1,4 @@
 #include "asyncserial1.h"
-#define __SERIAL1_SUPPORT__
-#if defined(__AVR_ATmega48p__) ||  defined(__AVR_ATmega88P__) || defined(__AVR_ATmega328P__)
-#undef __SERIAL1_SUPPORT__
-#endif
 #if defined(__SERIAL1_SUPPORT__)
 AsyncSerial1 asyncSerial1;
 AsyncSerial::HW_UART_INT __hw_uart1_int;

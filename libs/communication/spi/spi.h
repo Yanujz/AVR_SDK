@@ -2,6 +2,8 @@
 #define SPI_H
 #include <avr/interrupt.h>
 #include <pins.h>
+#include <macros.h>
+#include <systemevent.h>
 
 ///@file
 
@@ -93,8 +95,19 @@ enum SPI_MODE {
 };
 
 
+typedef void spi_cb_t();
+namespace AsyncSPI{
 
+struct HW_SPI_INT : SystemEventHandler::SYS_EVENT
+{
+	HW_SPI_INT(){
+		user_cb = nullptr;
+		contex = nullptr;
+	}
+	spi_cb_t* user_cb;
+};
 
+}
 
 
 

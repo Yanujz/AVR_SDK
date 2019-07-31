@@ -1,37 +1,8 @@
 #pragma once
 #include <mega_common.h>
+#include <atmega328p_common.h>
+#include <atmega328p_common_define.h>
 
-#define PINx(x) (x << 0)
-#define BIT(x) (x << 4)
-#define PWM_GROUP(x) (x << 7)
-#define TIMERx(x) (x << 8)
-#define LETTERx(x) (x << 10)
-
-#define TIMER_0 0x00
-#define TIMER_1 0x01
-#define TIMER_2 0x02
-#define NO_TIMER 0x03
-
-#define LETTER_A 0x00
-#define LETTER_B 0x01
-
-#define PWM8BIT 0
-#define PWM16BIT 1
-
-#define _PINB 0x03
-#define _PINC 0x06
-#define _PIND 0x09
-#define NO_PINX 0xF
-
-
-enum class PIN_ADC : u8t {
-	A0,
-	A1,
-	A2,
-	A3,
-	A4,
-	A5
-};
 
 /*
 ╔════╦════╦════╦════╦════╦═════════╦════╦═══╦═══════════╦═══╦═══╦═══╦═══╦═══╦═══╦═══╗
@@ -57,34 +28,23 @@ enum class PIN : int
 	IO11 =	LETTERx(LETTER_A) | TIMERx(TIMER_2)  | PWM_GROUP(PWM8BIT)  | BIT(DD3) |  PINx(_PINB), //11 PCINT3 - MOSI
 	IO12 =	LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD4) |  PINx(_PINB), //12 PCINT4 - MISO
 	IO13 =	LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD5) |  PINx(_PINB), //13 PCINT5 - SCK
-	A0		 =	LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD0) |  PINx(_PINC), //14 PCINT8 - SCK
-	A1	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD1) |  PINx(_PINC), //15 PCINT9 - SCK
-	A2	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD2) |  PINx(_PINC), //16 PCINT10 - SCK
-	A3	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD3) |  PINx(_PINC), //17 PCINT11 - SCK
-	A4	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD4) |  PINx(_PINC), //18 PCINT12 - SCK
-	A5 	 = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD5) |  PINx(_PINC), //19 PCINT13 - SCK
+	A0		 =	LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD0) |  PINx(_PINC), //14 PCINT8 -
+	A1	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD1) |  PINx(_PINC), //15 PCINT9 -
+	A2	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD2) |  PINx(_PINC), //16 PCINT10 -
+	A3	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD3) |  PINx(_PINC), //17 PCINT11 -
+	A4	  = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD4) |  PINx(_PINC), //18 PCINT12 -
+	A5 	 = LETTERx(0)        | TIMERx(NO_TIMER) | PWM_GROUP(0)        | BIT(DD5) |  PINx(_PINC) //19 PCINT13 -
 };
 
+#define SPI0_DEFAULT_SS PIN::IO10
+#define SPI0_DEFAULT_MOSI PIN::IO11
+#define SPI0_DEFAULT_MISO PIN::IO12
+#define SPI0_DEFAULT_SCK PIN::IO13
 
-constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0};
+
+//constexpr u16t __hw_timer_addr[] = {0x24, 0x80, 0xB0};
 constexpr u8t PROGMEM __hw_int_mappedPin[] = {2, 3};
 
-
-constexpr volatile u8t* varToPinx(PIN x){
-	return (&_SFR_IO8(toU16(x) & 0xF));
-}
-constexpr u8t varToRegBit(PIN x){
-	return ((toU16(x) >> 4) & 0x07);
-}
-constexpr u8t varToPWMGroup(PIN x){
-	return ((toU16(x) >> 7) & 0x01);
-}
-constexpr u8t varToTimer(PIN x){
-	return ((toU16(x) >> 8) & 0x07);
-}
-constexpr u8t varToLetter(PIN x){
-	return 	(((toU16(x) >> 10) & 0x03));
-}
 
 
 

@@ -5,6 +5,10 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
+#define __SERIAL0_SUPPORT__
+#define __SPI0_SUPPORT__
+
+
 
 
 #define TCCRxB_8BIT(x)  (*(x + 1))

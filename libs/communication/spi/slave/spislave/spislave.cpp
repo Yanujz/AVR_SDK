@@ -12,7 +12,7 @@ SlaveSPI *SlaveSPI::getInstance(slaveSPI_t data)
 
 
 
-
+/*
 
 SlaveSPI::SlaveSPI()
 {
@@ -52,8 +52,7 @@ SlaveSPI::SlaveSPI(slaveSPI_t data, SPI_DORD dataOrder, SPI_CLKSEL clockSel, SPI
 void SlaveSPI::setISR(bool value)
 {
 	if(value){
-		SPCR |= (1 << SPIE);
-		sei();
+
 		return;
 	}
 	SPCR &= ~(1 << SPIE);
@@ -168,4 +167,31 @@ ISR(SPI_STC_vect){
 	// Start transmission
 	//SPDR = a;
 	// Wait for transmission complete
+}
+*/
+
+void SlaveSPI::end()
+{
+	*SPCRx &= ~bitValue(SPE);
+}
+
+u8t SlaveSPI::receive()
+{
+	// Wait for reception complete
+	//while(!(SPSR & (1<<SPIF)));
+	loop_until_bit_is_clear(_SPSRx(SPCRx), bitValue(SPIF));
+
+	// Return Data Register
+	return _SPDRx(SPCRx);
+}
+
+void SlaveSPI::init(u16t cfg, PIN miso, PIN mosi, PIN sck, PIN ss)
+{
+	pinMode(miso, OUTPUT);
+	pinMode(mosi, INPUT);
+	pinMode(sck, INPUT);
+	pinMode(ss, INPUT);
+
+	*SPCRx = bitValue(SPE) | ~bitValue(MSTR) | LO(cfg);
+	_SPSRx(SPCRx) = HI(cfg);
 }

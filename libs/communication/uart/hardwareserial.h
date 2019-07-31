@@ -1,18 +1,19 @@
-#ifndef HARDWARESERIAL_H
-#define HARDWARESERIAL_H
-#if defined(__AVR_ATmega328P__) ||  defined(__AVR_ATmega640__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+#pragma once
+#include <core.h>
+
+#if defined(__SERIAL0_SUPPORT__)
 #include <asyncserial0.h>
 #endif
-#if defined(__AVR_ATmega640__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__)
+
+#if defined(__SERIAL1_SUPPORT__)
 #include <asyncserial1.h>
+#endif
+
+#if defined(__SERIAL2_SUPPORT__)
 #include <asyncserial2.h>
-#include <asyncserial3.h>
-#else
-#include <asyncserial0.h>
-#include <asyncserial1.h>
-#include <asyncserial2.h>
+#endif
+
+#if defined(__SERIAL3_SUPPORT__)
 #include <asyncserial3.h>
 #endif
 
-
-#endif // HARDWARESERIAL_H
