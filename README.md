@@ -18,6 +18,11 @@ First of all install some dependencies:
 sudo apt install libftdi1 libusb-0.1-4 binutils-avr gcc-avr avr-libc avrdude
 ```
 
+#### Fedora 30
+```
+sudo dnf install libftdi libusb avr-binutils gcc-avr avr-libc avrdude avr-gcc-c++
+```
+
 ### Installing
 
 To install it just do
@@ -29,7 +34,7 @@ cd ~ && git clone https://github.com/Yanujz/AVR_SDK.git
 
 Now let's check if everything is ok.
 ```
-cd ~/AVR_SDK/blink
+cd ~/AVR_SDK/examples/basic/blink
 make
 ```
 You should have something like this 
@@ -48,7 +53,7 @@ If you have this, everything is ok.
 
 ### Uploading sketch
 ```
-cd ~/AVR_SDK/blink
+cd ~/AVR_SDK/examples/basic/blink
 make upload
 ```
 You should have something like this
