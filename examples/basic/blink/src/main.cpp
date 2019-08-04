@@ -1,13 +1,18 @@
-#include "avr_sdk.h"
+#include <pins.h>
+
+/* Blink Example
+ *
+
+*/
 
 
 
 int main(){
 
-	Pin builtin_led(13,OUTPUT);
+	pinMode(PIN::IO13, OUTPUT);
 
 	while (1) {
-		builtin_led.toggle();
+		digitalToggle(PIN::IO13);
 		_delay_ms(500);
 	}
 
