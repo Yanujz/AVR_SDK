@@ -19,7 +19,7 @@ CXX_OBJS  = $(CXX_SRCS:.cpp=.o)
 C_SRCS := $(shell find ./ -type f -regex ".*\.c")
 C_OBJS  = $(C_SRCS:.c=.o)
 
-INCLUDE_DIR := -I /usr/lib/avr/include -I ../standardCpp \
+INCLUDE_DIR := -I /usr/lib/avr/include \
 	$(addprefix -I ,$(shell find ./ -name  '*.h' -exec dirname {} \;)) \
 	$(addprefix -I ,$(shell find ./ -name  '*.hpp' -exec dirname {} \;))
 #

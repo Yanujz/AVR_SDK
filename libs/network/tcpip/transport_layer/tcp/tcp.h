@@ -52,7 +52,7 @@ struct tcp_header_t
     u16t crc;
     u16t urgentPointer; //If the URG bit is set, this field points to the sequence number of the last byte in a sequence of urgent data.
     u32t option_pad;
-    std::vector<u8t> payload;
+    //std::vector<u8t> payload;
 };
 enum class ECN
 {
@@ -76,8 +76,8 @@ class Tcp
 public:
     Tcp();
     ~Tcp();
-    void encapsulate(std::vector<u8t> & payload);
-    std::vector<u8t> decapsulate(std::vector<u8t> & data);
+    //void encapsulate(std::vector<u8t> & payload);
+    //std::vector<u8t> decapsulate(std::vector<u8t> & data);
 
 
 private:

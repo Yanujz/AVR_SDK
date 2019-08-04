@@ -9,7 +9,7 @@ IPv4::~IPv4()
 {
 
 }
-
+/*
 void IPv4::encapsulate(std::vector<u8t> &payload)
 {
 
@@ -30,7 +30,7 @@ std::vector<u8t> IPv4::decapsulate(std::vector<u8t> &data)
 {
 
 }
-
+*/
 void IPv4::setSrcAddress(ipv4addr_t &ip)
 {
     packet.sourceAddress = ip.ip;

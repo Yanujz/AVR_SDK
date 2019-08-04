@@ -1,12 +1,12 @@
 #ifndef ENC28J60_H
 #define ENC28J60_H
 #include <spimaster.h>
-#include <string>
+//#include <string>
 #include <macros.h>
 #include <net_utils.h>
 //#include <serial.h>
 //#include <interrupt.h>
-#include <functional>
+//#include <functional>
 #include <systemevent.h>
 ///@file
 

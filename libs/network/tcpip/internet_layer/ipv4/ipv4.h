@@ -5,11 +5,11 @@
 #include <utils.h>
 #include <ethernet.h>
 #include <serial.h>
-#include <string>
+//#include <string>
 #include <strutil.h>
 #include <inet_global.h>
 //#include <net_utils.h>
-extern bool debug;
+//extern bool debug;
 //#include <vector>
 
 /* IPv4 Header
@@ -122,10 +122,10 @@ public:
     //---- Methods -----//
     IPv4();
     ~IPv4();
-
+/*
     void encapsulate(std::vector<u8t> & payload);
     std::vector<u8t> decapsulate(std::vector<u8t> & data);
-
+*/
     u32t getSrcAddress();
     void setSrcAddress(ipv4addr_t & ip);
 

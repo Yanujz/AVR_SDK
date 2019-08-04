@@ -34,11 +34,11 @@ public:
 
     arp_table_t getRecord(uint16_t index);
 
-    std::vector<arp_table_t> getAllRecords();
+    //std::vector<arp_table_t> getAllRecords();
 
 
 private:
-    std::vector<arp_table_t> arpTable;
+    //std::vector<arp_table_t> arpTable;
 };
 
 #endif // ARPTABLE_H
