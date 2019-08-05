@@ -2,12 +2,13 @@
 
 This is my concept of AVR programming.
 
-### Supported microcontroller
+### Supported microcontrollers
   - atmega2560
   - atmega328p
 ### Supported boards
-- Arduino mega R3
-- Arduino uno R3
+- Arduino Mega 2560 Rev3
+- Arduino Uno Rev3
+- Arduino Nano 3.x
   
 #
 In future others boards will be supported.
