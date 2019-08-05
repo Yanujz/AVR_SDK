@@ -1,0 +1,14 @@
+#!/bin/bash
+echo "Installing dependencies..."
+if [ -d ~/.avr_sdk ]; then rm -Rf ~/.avr_sdk; fi
+mkdir ~/.avr_sdk
+cp -r ./createNewAvrProject/dependencies ~/.avr_sdk/
+sudo cp  ./createNewAvrProject/createNewAvrProject /usr/local/bin
+sudo cp  ./rawSerialMonitor/rawSerialMonitor /usr/local/bin
+sudo cp  ./AsmCyclesCounter/app/asmCycleCounter /usr/local/bin
+sudo cp  ./createCppClass/createCppClass /usr/local/bin
+sudo chmod +x /usr/local/bin/createNewAvrProject
+sudo chmod +x /usr/local/bin/rawSerialMonitor
+sudo chmod +x /usr/local/bin/asmCycleCounter
+sudo chmod +x /usr/local/bin/createCppClass
+echo "Done."

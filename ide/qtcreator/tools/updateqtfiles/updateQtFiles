@@ -1,0 +1,18 @@
+#!/bin/bash
+SDK_LIB_PATH=~/Documents/GitHub/AVR_SDK/libs
+DEFAULT_FILE="src/main.cpp"
+DEFAULT_INCLUDE="src\\n/usr/lib/avr/include"
+
+FILES=$(realpath $(find ${SDK_LIB_PATH} -name '*.h' -o  -name '*.cpp' -o  -name '*.c' -o  -name '*.hpp'))
+_PATH=$(realpath $(find ${SDK_LIB_PATH} -name '*.h' -exec dirname {} \; -o  -name '*.cpp' -exec dirname {} \; -o  -name '*.c' -exec dirname {} \; -o -name '*.hpp' -exec dirname {} \;) | sort | uniq)
+
+INCLUDE_FILE=$(ls *.includes)
+FILES_FILE=$(ls *.files)
+
+echo "Writing .files"
+echo -e $DEFAULT_FILE > ${FILES_FILE}
+printf '%s\n' "${FILES[@]}" >> $FILES_FILE
+echo "Writing .includes"
+echo -e $DEFAULT_INCLUDE > ${INCLUDE_FILE}
+printf '%s\n' "${_PATH[@]}" >> $INCLUDE_FILE
+echo "Done."

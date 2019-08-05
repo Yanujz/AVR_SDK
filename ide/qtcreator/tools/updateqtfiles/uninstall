@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Removing files..."
+if [ -f /usr/local/bin/updateQtFiles ]; then 
+	$(sudo rm /usr/local/bin/updateQtFiles)
+fi
+echo "Done."

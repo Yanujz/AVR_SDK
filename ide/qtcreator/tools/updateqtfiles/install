@@ -1,0 +1,4 @@
+#!/bin/bash
+echo  "Installing..."
+sudo cp updateQtFiles /usr/local/bin
+echo "Done."

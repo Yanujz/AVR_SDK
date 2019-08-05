@@ -43,3 +43,8 @@ examples/basic/pwm/pwm.creator.user.b2d6f6d.4.8-pre1
 =======
 .DS_Store
 >>>>>>> Stashed changes
+examples/basic/fade/fade.creator.user.309f04c
+docs/doxygen/sample_text.conf
+docs/doxygen/README.md
+docs/doxygen/latex/Makefile
+examples/communication/uartTest/uart.creator.user.4.8-pre1

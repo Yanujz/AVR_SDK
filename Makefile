@@ -1,4 +1,8 @@
-SDK_PATH 	= $(shell realpath ~/Documenti/GitHub/AVR_SDK)
+SDK_PATH = $(shell realpath ~/Documents/GitHub/AVR_SDK)
+ifeq ($(SDK_PATH), ) 
+    $(error SDK_PATH do not exists, please set corret SDK_PATH into makefile)
+endif 
+
 SRC_DIR 	= src
 #Building stuff
 BUILD_DIR 	= build
@@ -28,34 +32,39 @@ COM_PORT ?= /dev/ttyUSB0
 COM_BAUDRATE ?= 1000000
 
 
-
+#
 CXX = avr-g++
 CC  = avr-gcc
 
+#
 C_SRCS := $(shell find $(SRC_DIR)/ -type f -regex ".*\.c") 
+
 C_OBJS  = $(C_SRCS:.c=.o)
 
+#
 CXX_SRCS := $(shell find $(SRC_DIR)/ -type f -regex ".*\.cpp") 
 CXX_OBJS  = $(CXX_SRCS:.cpp=.o)
 
+#
 ASM_SRCS  = $(shell find $(SRC_DIR)/ -type f -regex ".*\.s")
 ASM_OBJS  = $(ASM_SRCS:.s=.o)
 
 #
 INCLUDE_DIR := -I /usr/lib/avr/include \
 	$(addprefix -I ,$(shell find $(SRC_DIR) -name  '*.h' -exec dirname {} \; | sort| uniq)) \
-	$(addprefix -I ,$(shell find $(LIBS_DIR) -name  '*.h' -exec dirname {} \; | sort| uniq)) 
+	$(addprefix -I ,$(shell find $(SRC_DIR) -name  '*.hpp' -exec dirname {} \; | sort| uniq)) \
+	$(addprefix -I ,$(shell find $(LIBS_DIR) -name  '*.h' -exec dirname {} \; | sort| uniq)) \
+	$(addprefix -I ,$(shell find $(LIBS_DIR) -name  '*.hpp' -exec dirname {} \; | sort| uniq)) 
 
 #
-CXX_FLAGS = -nostdlib -std=c++11 -Wmain -Wextra -fdata-sections -ffunction-sections -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums $(INCLUDE_DIR) 
-CC_FLAGS = -nostdlib -std=gnu99 -Wmain -Wextra -fdata-sections -ffunction-sections -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums $(INCLUDE_DIR) 
+CXX_FLAGS = -nostdlib -std=c++11 -Wmain -Wextra -fdata-sections -ffunction-sections \
+			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
+#
+CC_FLAGS  = -nostdlib -std=gnu99 -Wmain -Wextra -fdata-sections -ffunction-sections \
+			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
 #
 LD_FLAGS  = -Wl,-L$(LIBS_DIR)/static_lib -lysdk_$(MICRO) -Wl,--gc-sections -Wl,--strip-all
 #LD_FLAGS  = -Wl,-u,vfprintf,-lprintf_flt -L$(STL)/static_lib -L/home/zetes/Documents/GitHub/AVR_SDK/libs/static_lib -lysdk_atmega328p
-
-
-
-
 
 # Default target. (default atmega2560)
 all: atmega2560
@@ -63,7 +72,8 @@ all: atmega2560
 #
 upload: 
 	@killall hexdump putty 2>/dev/null || true
-	@avrdude -F -q -v -p $(MPROG) -D -c $(PROGRAMMER) -b $(FLASH_BAUDRATE) -P $(FLASH_PORT) -U flash:w:$(FIRMW_DIR)/main.hex:i
+	@avrdude -F -q -v -p $(MPROG) -D -c $(PROGRAMMER) -b $(FLASH_BAUDRATE) -P $(FLASH_PORT) \
+			-U flash:w:$(FIRMW_DIR)/main.hex:i
 #
 app: main.elf
 	@avr-objcopy -j .text -j .data -O ihex $(ELF_DIR)/main.elf $(FIRMW_DIR)/main.hex
@@ -79,15 +89,15 @@ size:
 
 %.o: %.c
 	@echo "Compiling file : $(notdir $<)"
-	@$(CC) $(CC_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO)  -c $<  -o $(OBJ_DIR)/$(notdir $@)
-	@$(CC) $(CC_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO) -E -o $(PREPROC_DIR)/$(notdir $(basename $@)).prepoc $<
-	@$(CC) $(CC_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO) -S -o $(ASM_DIR)/$(notdir $(basename $@)).s $<
+	@$(CC) $(CC_FLAGS) -Os  -c $<  -o $(OBJ_DIR)/$(notdir $@)
+	@$(CC) $(CC_FLAGS) -Os -mmcu=$(MICRO) -E -o $(PREPROC_DIR)/$(notdir $(basename $@)).prepoc $<
+	@$(CC) $(CC_FLAGS) -Os -mmcu=$(MICRO) -S -o $(ASM_DIR)/$(notdir $(basename $@)).s $<
 
 %.o: %.cpp
 	@echo "Compiling file : $(notdir $<)"
-	@$(CXX) $(CXX_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO)  -c $<  -o $(OBJ_DIR)/$(notdir $@)
-	@$(CXX) $(CXX_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO) -E -o $(PREPROC_DIR)/$(notdir $(basename $@)).prepoc $<
-	@$(CXX) $(CXX_FLAGS)  -DF_CPU=$(F_CPU) -Os -mmcu=$(MICRO) -S -o $(ASM_DIR)/$(notdir $(basename $@)).s $<
+	@$(CXX) $(CXX_FLAGS) -Os -mmcu=$(MICRO)  -c $<  -o $(OBJ_DIR)/$(notdir $@)
+	@$(CXX) $(CXX_FLAGS) -Os -mmcu=$(MICRO) -E -o $(PREPROC_DIR)/$(notdir $(basename $@)).prepoc $<
+	@$(CXX) $(CXX_FLAGS) -Os -mmcu=$(MICRO) -S -o $(ASM_DIR)/$(notdir $(basename $@)).s $<
 
 %.o: %.s
 	@echo "Compiling file : $(notdir $<)"
@@ -122,7 +132,7 @@ clean:
 
 
 # ATMEGA2560
-# Compile for atmega2560
+# Compile for atmega2560.
 atmega2560: MPROG := m2560
 #
 atmega2560: MICRO := atmega2560
@@ -143,7 +153,7 @@ atmega2560_buildlib:
 	@make -C $(LIBS_DIR) atmega2560
 
 # ATMEGA328P 
-# Compile for atmega328p
+# Compile for atmega328p.
 atmega328p: MPROG := m328p
 #
 atmega328p: MICRO := atmega328p

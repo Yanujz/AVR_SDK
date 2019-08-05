@@ -1,6 +1,0 @@
-src/macros.h
-src/main.cpp
-src/portmanager/portmanager.cpp
-src/portmanager/portmanager.h
-src/micro/atmega328p.h
-src/micro/atmega328p.cpp

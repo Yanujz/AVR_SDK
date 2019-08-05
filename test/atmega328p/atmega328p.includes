@@ -1,6 +1,0 @@
-src
-src/portmanager
-/usr/lib/avr/include
-src/micro
-/home/zetes/Documents/GitHub/AVR_SDK/examples/communication/uartTest/libs/gpio/portmanager
-/home/zetes/Documents/GitHub/AVR_SDK/examples/communication/uartTest/libs/core
