@@ -3,7 +3,11 @@
 This is my concept of AVR programming.
 
 ### Supported microcontroller
-  atmega2560
+  atmega2560 atmega328p
+### Supported boards
+Arduino mega R3
+Arduino uno R3
+  
 #
 In future others boards will be supported.
 These libraries are shared as is, without any warranty.
