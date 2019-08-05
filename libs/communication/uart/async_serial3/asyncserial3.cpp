@@ -15,11 +15,11 @@ void AsyncSerial3::begin(HW_UART baud)
 }
 
 void AsyncSerial3::registerCallback(ser_cb_t *cb){
-	__hw_uart3_int.user_cb_vect = cb;
+	__hw_uart3_int.user_cb = cb;
 }
 
-void AsyncSerial3::registerCallback(SystemEventHandler *cb){
-	__hw_uart3_int.contex = cb;
+void AsyncSerial3::registerCallback(SystemEventHandler *context){
+	__hw_uart3_int.context = context;
 }
 
 
@@ -30,15 +30,15 @@ ISR(USART3_RX_vect){
 	if(asyncSerial3.echoIsEnabled()){
 		UDR3 = temp;
 	}
-	if(__hw_uart3_int.user_cb_vect != nullptr){
-		__hw_uart3_int.user_cb_vect();
+	if(nullptr != __hw_uart3_int.user_cb){
+		__hw_uart3_int.user_cb();
 	}
-	else if(__hw_uart3_int.contex != nullptr) {
-		SystemEventHandler::call_int_callback(__hw_uart3_int.contex, temp);
+	else if(nullptr != __hw_uart3_int.context) {
+		SystemEventHandler::call_int_callback(__hw_uart3_int.context, temp);
 	}
 }
 ISR(USART3_TX_vect){
-	if(asyncSerial3.is_tx_fifo_empty() == false) {
+	if(false == asyncSerial3.is_tx_fifo_empty()) {
 		UDR3 = asyncSerial3.pop_tx_fifo();
 	}
 }

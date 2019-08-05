@@ -46,5 +46,5 @@ bool AsyncMasterSPI::is_tx_fifo_empty()
 
 void AsyncMasterSPI::init()
 {
-	*SPCRx |= bitValue(SPIE);
+	*SPIx_CFG_REG |= bitValue(SPIE);
 }

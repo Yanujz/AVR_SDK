@@ -1,5 +1,8 @@
 #pragma once
-
+#if defined(__COMPILE__)
+#else
+#include <avr/iom2560.h>
+#endif
 #define __SERIAL1_SUPPORT__
 #define __SERIAL2_SUPPORT__
 #define __SERIAL3_SUPPORT__
@@ -39,3 +42,39 @@
 #define _PINJ (OR100 | 0x03)
 #define _PINK (OR100 | 0x06)
 #define _PINL (OR100 | 0x09)
+
+
+
+
+
+#define SPI0_CFG_REG &SPCR
+#define SPI0_CFG_BIT_SPIE    SPIE
+#define SPI0_CFG_BIT_SPE     SPE
+#define SPI0_CFG_BIT_DORD    DORD
+#define SPI0_CFG_BIT_MSTR    MSTR
+#define SPI0_CFG_BIT_CPOL    CPOL
+#define SPI0_CFG_BIT_CPHA    CPHA
+#define SPI0_CFG_BIT_SPR1    SPR1
+#define SPI0_CFG_BIT_SPR0    SPR0
+
+#define SPI0_STAT_REG SPSR
+#define SPI0_STAT_BIT_SPIF    SPIF
+#define SPI0_STAT_BIT_WCOL    WCOL
+#define SPI0_STAT_BIT_SPI2X   SPI2X
+
+#define SPI0_DATA_REG SPDR
+
+
+
+#define SPI_CFG_BIT_SPIE    SPIE
+#define SPI_CFG_BIT_SPE     SPE
+#define SPI_CFG_BIT_DORD    DORD
+#define SPI_CFG_BIT_MSTR    MSTR
+#define SPI_CFG_BIT_CPOL    CPOL
+#define SPI_CFG_BIT_CPHA    CPHA
+#define SPI_CFG_BIT_SPR1    SPR1
+#define SPI_CFG_BIT_SPR0    SPR0
+
+#define SPI_STAT_BIT_SPIF    SPIF
+#define SPI_STAT_BIT_WCOL    WCOL
+#define SPI_STAT_BIT_SPI2X   SPI2X

@@ -6,7 +6,7 @@ AsyncSerial::AsyncSerial() : Serial(){}
 
 void AsyncSerial::startAsyncSend()
 {
-	_UDRx(UCSRxA) = tx_fifo.pop();
+	*UART_UDRx_REG_OFFSET(UCSRxA) = tx_fifo.pop();
 }
 
 void AsyncSerial::push_rx_fifo(u8t value)
@@ -40,7 +40,7 @@ void AsyncSerial::push_tx_fifo(u8t* value, int size, bool startOnFinish)
 		tx_fifo.push(*value++);
 	}
 	if(startOnFinish){
-		_UDRx(UCSRxA) = tx_fifo.pop();
+		*UART_UDRx_REG_OFFSET(UCSRxA) = tx_fifo.pop();
 	}
 
 }
@@ -60,13 +60,6 @@ bool AsyncSerial::is_tx_fifo_empty()
 	return tx_fifo.isEmpty();
 }
 
-void AsyncSerial::enable_tx_rx_isr()
-{
-	_UCSRxB(UCSRxA) |= bitValue(RXCIE0);
-	_UCSRxB(UCSRxA) |= bitValue(TXCIE0);
-	sei();
-}
-
 void AsyncSerial::setEchoServer(bool state)
 {
 	_echoServer = state;
@@ -82,5 +75,9 @@ bool AsyncSerial::echoIsEnabled()
 
 
 void AsyncSerial::init(){
-	enable_tx_rx_isr();
+	//Enabling TX/RX interrupts
+	*UCSRxB_REG |= bitValue(RXCIE0) | bitValue(TXCIE0);
+
+	//Enabling global interrupts
+	sei();
 }

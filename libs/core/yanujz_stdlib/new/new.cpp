@@ -1,4 +1,4 @@
-#include "cppfix.h"
+#include "new.h"
 
 
 int __cxa_guard_acquire(__guard *g) {return !*(char *)(g);}

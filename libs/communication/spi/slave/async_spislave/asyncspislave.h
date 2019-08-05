@@ -6,11 +6,9 @@ class AsyncSlaveSPI : public virtual SlaveSPI
 {
 public:
 	AsyncSlaveSPI();
-	virtual void begin(SPI_MODE mode = MODE_0,
-																				SPI_CLKSEL clock = FOSC_BY_128,
-																				SPI_DORD dataOrder = MSB_FIRST) = 0;
+	virtual void begin() = 0;
 	virtual void registerCallback(spi_cb_t* cb = nullptr) = 0;
-	virtual void registerCallback(SystemEventHandler* cb = nullptr) = 0;
+	virtual void registerCallback(SystemEventHandler* context = nullptr) = 0;
 
 protected:
 	void init();

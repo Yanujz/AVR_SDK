@@ -15,11 +15,11 @@ void AsyncSerial0::begin(HW_UART baud)
 }
 
 void AsyncSerial0::registerCallback(ser_cb_t *cb){
-	__hw_uart0_int.user_cb_vect = cb;
+	__hw_uart0_int.user_cb = cb;
 }
 
-void AsyncSerial0::registerCallback(SystemEventHandler *cb){
-	__hw_uart0_int.contex = cb;
+void AsyncSerial0::registerCallback(SystemEventHandler *context){
+	__hw_uart0_int.context = context;
 }
 
 #if defined(USART0_RX_vect)
@@ -32,11 +32,11 @@ ISR(USART_RX_vect){
 	if(asyncSerial0.echoIsEnabled()){
 		UDR0 = temp;
 	}
-	if(__hw_uart0_int.user_cb_vect != nullptr){
-		__hw_uart0_int.user_cb_vect();
+	if( nullptr != __hw_uart0_int.user_cb){
+		__hw_uart0_int.user_cb();
 		}
-	else if(__hw_uart0_int.contex != nullptr) {
-		SystemEventHandler::call_int_callback(__hw_uart0_int.contex, temp);
+	else if(nullptr != __hw_uart0_int.context) {
+		SystemEventHandler::call_int_callback(__hw_uart0_int.context, temp);
 	}
 }
 
@@ -45,7 +45,7 @@ ISR(USART0_TX_vect){
 #elif defined(USART_TX_vect)
 ISR(USART_TX_vect){
 #endif
-	if(asyncSerial0.is_tx_fifo_empty() == false) {
+	if(false == asyncSerial0.is_tx_fifo_empty()) {
 		UDR0 = asyncSerial0.pop_tx_fifo();
 	}
 }

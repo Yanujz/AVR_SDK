@@ -78,13 +78,13 @@ inline char* ftoa(float n, char *__dst, int afterpoint){
 #undef getc
 inline u8t getc(volatile u8t* UCSRxA){
 	loop_until_bit_is_set(*UCSRxA, RXC0);
-	return _UDRx(UCSRxA);
+	return *UART_UDRx_REG_OFFSET(UCSRxA);
 }
 
 #undef putc
 inline void putc(u8t c, volatile u8t *UCSRxA){
 	loop_until_bit_is_set(*UCSRxA, UDRE0);
-	_UDRx(UCSRxA) = c;
+	*UART_UDRx_REG_OFFSET(UCSRxA) = c;
 }
 
 #undef puts

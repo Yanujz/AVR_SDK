@@ -1,65 +1,21 @@
 #ifndef MACROS_H
 #define MACROS_H
-#include <stdint.h>
-#include <stdlib.h>
+#include <common_typedef.h>
 ///@file
-
-
-
-/**
-	* @brief Shortname of uint8_t
-	*/
-typedef uint8_t u8t;
-
-/**
-	* @brief Shortname of uint16_t
-	*/
-typedef uint16_t u16t;
-
-/**
-	* @brief Shortname of uint32_t
-	*/
-typedef uint32_t u32t;
-
-/**
-	* @brief Shortname of uint64_t
-	*/
-typedef uint64_t u64t;
-
-/**
-	* @brief Shortname of unsigned int
-	*/
-typedef unsigned int uint;
-
-
-/**
-	* @brief debug
-	*/
-//extern bool debug;
-
-/*
-#define dbg( ... ) do{ \
-				if (debug) { \
-				serial->printf(__VA_ARGS__); } \
-				} while (0)
-*/
-//#define ROUND(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))
-
 
 
 
 #define SIZE_OF_ARRAY(x) sizeof(x)/sizeof(x[0])
 template<size_t N, class T>
 constexpr size_t sizeOfArray(T(&)[N]) { return N; }
-
 #define ELEMENT_IN_ARRAY(x)  (*(&x + 1) - x)
 
 
 #define MYUBRR(x) (F_CPU/16/(float)x-1)
 
 //#define BAUD 9600
-#define MAX_SERIAL_BUFFER   256
-#define MAX_SPI_BUFFER      256
+//#define MAX_SERIAL_BUFFER   256
+//#define MAX_SPI_BUFFER      256
 
 
 /**
@@ -81,7 +37,11 @@ constexpr unsigned int toABS(int x){
 		*/
 #define HI(x) ((x >> 8) & 0xFF)
 
+#define LO8(x) (x & 0xFF)
+#define HI8(x) ((x >> 8) & 0xFF)
 
+#define LO16(x) (x & 0xFFFF)
+#define HI16(x) ((x >> 16) & 0xFFFF)
 
 //-------- Casting types --------//
 #define toU8(x) (static_cast<u8t> (x))
@@ -144,16 +104,22 @@ constexpr unsigned int toABS(int x){
 		*/
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 
-
+constexpr u16t toWord(u8t msb, u8t lsb){
+	return (msb << 8) | lsb;
+}
 #define regBitToValue(x) (1 << toU8(x))
 //#define bitValue(x) (1 << x)
 constexpr u8t bitValue(u8t x){
 	return (1 << x);
 }
+constexpr u8t setBitValue(bool val, u8t reg){
+	return val ? (1 << reg) : 0;
+}
 
 #define valueFromMask(var, mask) (var & mask)
 
-
+#define loop_while_bit_is_clear(reg, bit) 	(while( !(reg & (1 << bit) )))
+#define loop_while_bit_is_set(reg, bit) 	(while( (reg & (1 << bit) )))
 
 //#define CALCULATE_PWM_TICKS(freq) (1.0/freq)/(1.0/F_CPU)
 //#define CALCULATE_DUTY_16BIT(freq, duty) (CALCULATE_PWM_TICKS(freq)-(CALCULATE_PWM_TICKS(freq)*((float)duty/100)))
@@ -173,14 +139,15 @@ constexpr u8t calcDuty8bit(u8t duty){
 
 
 //---- UART MACROS ----//
+#define UART_UCSRxB_REG_OFFSET(x) (x  + 1)
+#define UART_UCSRxC_REG_OFFSET(x) (x  + 2)
+#define UART_UBRRxL_REG_OFFSET(x) (x  + 4)
+#define UART_UBRRxH_REG_OFFSET(x) (x  + 5)
+#define UART_UDRx_REG_OFFSET(x)   (x  + 6)
 
-#define _UCSRxB(x) (*(x  + 1))
-#define _UCSRxC(x) (*(x  + 2))
-#define _UBRRxL(x)  (*(x  + 4))
-#define _UBRRxH(x)  (*(x  + 5))
-#define _UDRx(x)   (*(x  + 6))
+
 
 //---- SPI MACROS ----//
-#define _SPSRx(x) (*(x  + 1))
-#define _SPDRx(x) (*(x  + 2))
+#define SPIx_STAT_REG_OFFSET(x) (x  + 1)
+#define SPIx_DATA_REG_OFFSET(x) (x  + 2)
 #endif

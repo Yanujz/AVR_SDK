@@ -1,22 +1,21 @@
 #include "serial.h"
 
+
 void Serial::init(HW_UART baud)
 {
-	_UBRRxH(UCSRxA) = HI(toU16(baud));
-	_UBRRxL(UCSRxA) = LO(toU16(baud));
-
-	// Enable receiver and transmitter //
-	_UCSRxB(UCSRxA) = (1<<RXEN0)|(1<<TXEN0);
-
-	// Set frame format: 8data, 1stop bit //
-	_UCSRxC(UCSRxA) = (1<<UCSZ01)|(1<<UCSZ00);
+	*UBRRxH_REG = HI8(toU16(baud));
+	*UBRRxL_REG = LO8(toU16(baud));
+	// Enable receiver and transmitter
+	*UCSRxB_REG = (1<<RXEN0)|(1<<TXEN0);
+	// Set frame format: 8data, 1stop bit
+	*UCSRxC_REG = (1<<UCSZ01)|(1<<UCSZ00);
 	//UCSR0A = (1<<U2X0); // Clock multiplier
 }
 
 void Serial::end()
 {
 	flush();
-	_UCSRxB(UCSRxA) &= ~(bitValue(RXEN0) | bitValue(TXEN0) | bitValue(RXCIE0) |	bitValue(TXCIE0));
+	*UCSRxB_REG &= ~(bitValue(RXEN0) | bitValue(TXEN0) | bitValue(RXCIE0) |	bitValue(TXCIE0));
 }
 
 void Serial::printf(const char *fmt, ...)
@@ -58,16 +57,15 @@ void Serial::readUntil(char *buffer, char chr)
 
 void Serial::flush()
 {
-
 	u8t dummy;
-	while(*UCSRxA & (1<<RXC0)){
-		dummy = _UDRx(UCSRxA);
+	while(*UCSRxA & bitValue(RXC0)){
+		dummy = *UDRx_REG;
 	}
 }
 
 bool Serial::isAvailable()
 {
-	return ((*UCSRxA & (1 << RXC0)) >> RXC0); // Return true means is available
+	return *UCSRxA & bitValue(RXC0); // Return true means is available
 }
 
 char Serial::receive()

@@ -2,10 +2,7 @@
 #define ASYNCSERIAL_H
 #include <serial.h>
 #include <fifo.hpp>
-
-typedef void ser_cb_t();
-
-
+#include <common_structures.h>
 
 class AsyncSerial : public virtual Serial
 {
@@ -14,16 +11,15 @@ public:
 	struct HW_UART_INT : SystemEventHandler::SYS_EVENT
 	{
 		HW_UART_INT(){
-			user_cb_vect = nullptr;
-			contex = nullptr;
+			user_cb = nullptr;
+			context = nullptr;
 		}
-		ser_cb_t* user_cb_vect;
+		ser_cb_t* user_cb;
 	};
-
 	AsyncSerial();
 	virtual void begin(HW_UART baud) = 0;
 	virtual void registerCallback(ser_cb_t* cb = nullptr) = 0;
-	virtual void registerCallback(SystemEventHandler* cb = nullptr) = 0;
+	virtual void registerCallback(SystemEventHandler* context = nullptr) = 0;
 
 	void startAsyncSend();
 
@@ -38,7 +34,6 @@ public:
 	void reset_tx_fifo();
 	bool is_tx_fifo_empty();
 
-	void enable_tx_rx_isr();
 	void setEchoServer(bool state = false);
 	bool echoIsEnabled();
 
@@ -49,5 +44,4 @@ protected:
 	Fifo<u8t, 32> tx_fifo;
 };
 
-//extern __HW_INT_ISR __hw_serial_cb[4];
 #endif // ASYNCSERIAL_H

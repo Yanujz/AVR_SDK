@@ -6,7 +6,7 @@ class SystemEventHandler
 public:
 	struct SYS_EVENT
 	{
-		SystemEventHandler* contex;
+		SystemEventHandler* context;
 	};
 
 	SystemEventHandler();

@@ -2,11 +2,12 @@
 #define PINS_H
 #include <core.h>
 
-// Must pass PINx
-#define _DDRx(x) (*(x  + 1))
 
 // Must pass PINx
-#define _PORTx(x) (*(x  + 2))
+#define DDRx_OFFSET(x) (x  + 1)
+
+// Must pass PINx
+#define PORTx_OFFSET(x) (x  + 2)
 
 
 #ifdef __cplusplus
@@ -76,14 +77,13 @@ typedef enum {
 
 inline void pinMode(PIN pin, DDRx dir)  {
 	if (dir == OUTPUT) {
-		*(varToPinx(pin)+1) |= __bitToValue[varToRegBit(pin)];
+		*DDRx_OFFSET(varToPinx(pin)) |= __bitToValue[varToRegBit(pin)];
 		return;
 	} else {
-		*(varToPinx(pin)+1) &= ~__bitToValue[varToRegBit(pin)];
-
+		*DDRx_OFFSET(varToPinx(pin)) &= __bitToValue_compl[varToRegBit(pin)];
 	}
 	if(dir == INPUT_PULLUP){
-		*(varToPinx(pin)+2) |= __bitToValue[varToRegBit(pin)];
+		*PORTx_OFFSET(varToPinx(pin)) |= __bitToValue[varToRegBit(pin)];
 	}
 }
 
@@ -92,15 +92,15 @@ inline void digitalToggle(PIN pin) {
 }
 
 inline void digitalSet(PIN pin) {
-	*(varToPinx(pin)+2) = __bitToValue[varToRegBit(pin)];
+	*PORTx_OFFSET(varToPinx(pin)) = __bitToValue[varToRegBit(pin)];
 }
 
 inline void digitalClr(PIN pin) {
-	*(varToPinx(pin)+2) &= __bitToValue_compl[varToRegBit(pin)];
+	*PORTx_OFFSET(varToPinx(pin)) &= __bitToValue_compl[varToRegBit(pin)];
 }
 
 inline bool digitalRead(PIN pin) {
-	return *(varToPinx(pin)+2) & __bitToValue[varToRegBit(pin)];
+	return *PORTx_OFFSET(varToPinx(pin)) & __bitToValue[varToRegBit(pin)];
 }
 
 inline void digitalWrite(PIN pin, LOGIC_STATE level = LOW) {

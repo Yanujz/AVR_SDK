@@ -31,6 +31,7 @@ examples/communication/ethernet/enc28j60/lock/lock_bits
 *.o
 *.s
 *.o
+<<<<<<< Updated upstream
 *.cflags
 *.cxxflags
 *.prepoc
@@ -39,3 +40,6 @@ examples/basic/fade/fade.creator.user.187019d.4.8-pre1
 *.autosave
 *.user
 examples/basic/pwm/pwm.creator.user.b2d6f6d.4.8-pre1
+=======
+.DS_Store
+>>>>>>> Stashed changes

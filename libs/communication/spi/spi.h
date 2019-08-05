@@ -3,55 +3,19 @@
 #include <avr/interrupt.h>
 #include <pins.h>
 #include <macros.h>
-#include <systemevent.h>
+#include <common_structures.h>
 
+#define SPIx_STAT_REG SPIx_STAT_REG_OFFSET(SPIx_CFG_REG)
+#define SPIx_DATA_REG SPIx_DATA_REG_OFFSET(SPIx_CFG_REG)
 ///@file
-
-/**
-	* @brief The SPI_MODE enum
-	*/
-//enum SPI_MODE: uint8_t{
-//    SLAVE,
-//    MASTER,
-//};
 
 /**
 	* @brief The SPI Data Order enum
 	*/
-enum SPI_DORD: u8t{
-	MSB_FIRST,
-	LSB_FIRST
+enum SPI_DORD: u8t {
+	MSB_FIRST = setBitValue(0, SPI_CFG_BIT_DORD),
+	LSB_FIRST = setBitValue(1, SPI_CFG_BIT_DORD)
 };
-
-/**
-	* @brief The SPI Clock Polarity enum
-	* @verbatim
-╔═══════╦═════════════════════════════════════════════╗
-║ LR_TF ║ Leading Edge Rising - Trailing Edge Falling ║
-╠═══════╬═════════════════════════════════════════════╣
-║ LF_TR ║ Leading Edge Falling - Trailing Edge Rising ║
-╚═══════╩═════════════════════════════════════════════╝
-	*/
-enum SPI_CPOL: uint8_t{
-	LR_TF,
-	LF_TR
-};
-
-/**
-	* @brief The SPI Clock Phase enum
-	* @verbatim
-╔═══════╦═══════════════════════════════════════════╗
-║ LS_TP ║ Leading Edge Sample - Trailing Edge Setup ║
-╠═══════╬═══════════════════════════════════════════╣
-║ LP_TS ║ Leading Edge Setup - Trailing Edge Sample ║
-╚═══════╩═══════════════════════════════════════════╝
-		@endverbatim
-	*/
-enum SPI_CPHA:uint8_t{
-	LS_TP,
-	LP_TS
-};
-
 
 /**
 	* @brief The SPI Clock Rate Select enum
@@ -77,37 +41,26 @@ enum SPI_CPHA:uint8_t{
 ╚═══════╩══════╩══════╩═══════════════╝
 @endverbatim
 	*/
-enum SPI_CLKSEL: int{
-	FOSC_BY_4		 = 0x0000,
-	FOSC_BY_16	 = 0x0001,
-	FOSC_BY_64	 = 0x0002,
-	FOSC_BY_128 = 0x0003,
-	FOSC_BY_2	  = 0x0100,
-	FOSC_BY_8	  = 0x0101,
-	FOSC_BY_32  = 0x0102
+enum SPI_CLKSEL: u16t {
+	FOSC_BY_4		 = toWord(setBitValue(0, SPI_STAT_BIT_SPI2X), setBitValue(0, SPI_CFG_BIT_SPR1) | setBitValue(0, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_16	 = toWord(setBitValue(0, SPI_STAT_BIT_SPI2X), setBitValue(0, SPI_CFG_BIT_SPR1) | setBitValue(1, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_64	 = toWord(setBitValue(0, SPI_STAT_BIT_SPI2X), setBitValue(1, SPI_CFG_BIT_SPR1) | setBitValue(0, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_128 = toWord(setBitValue(0, SPI_STAT_BIT_SPI2X), setBitValue(1, SPI_CFG_BIT_SPR1) | setBitValue(1, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_2	  = toWord(setBitValue(1, SPI_STAT_BIT_SPI2X), setBitValue(0, SPI_CFG_BIT_SPR1) | setBitValue(0, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_8	  = toWord(setBitValue(1, SPI_STAT_BIT_SPI2X), setBitValue(0, SPI_CFG_BIT_SPR1) | setBitValue(1, SPI_CFG_BIT_SPR0)),
+	FOSC_BY_32  = toWord(setBitValue(1, SPI_STAT_BIT_SPI2X), setBitValue(1, SPI_CFG_BIT_SPR1) | setBitValue(0, SPI_CFG_BIT_SPR0))
 };
 
-enum SPI_MODE {
-	MODE_0 = (0 << 2),
-	MODE_1 = (1 << 2),
-	MODE_2 = (2 << 2),
-	MODE_3 = (3 << 2)
+enum SPI_MODE : u8t {
+	MODE_0 = setBitValue(0, SPI_CFG_BIT_CPOL) | setBitValue(0, SPI_CFG_BIT_CPHA),
+	MODE_1 = setBitValue(0, SPI_CFG_BIT_CPOL) | setBitValue(1, SPI_CFG_BIT_CPHA),
+	MODE_2 = setBitValue(1, SPI_CFG_BIT_CPOL) | setBitValue(0, SPI_CFG_BIT_CPHA),
+	MODE_3 = setBitValue(1, SPI_CFG_BIT_CPOL) | setBitValue(1, SPI_CFG_BIT_CPHA)
 };
 
 
-typedef void spi_cb_t();
-namespace AsyncSPI{
 
-struct HW_SPI_INT : SystemEventHandler::SYS_EVENT
-{
-	HW_SPI_INT(){
-		user_cb = nullptr;
-		contex = nullptr;
-	}
-	spi_cb_t* user_cb;
-};
 
-}
 
 
 

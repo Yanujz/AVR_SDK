@@ -11,7 +11,7 @@ public:
 																							SPI_CLKSEL clock = FOSC_BY_128,
 																							SPI_DORD dataOrder = MSB_FIRST) override;
 				virtual void registerCallback(spi_cb_t* cb = nullptr) override;
-				virtual void registerCallback(SystemEventHandler* cb = nullptr) override;
+				virtual void registerCallback(SystemEventHandler* context = nullptr) override;
 };
 extern AsyncMasterSPI0 asyncMasterSPI0;
 #endif // ASYNCMASTERSPI0_H

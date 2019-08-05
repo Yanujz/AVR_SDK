@@ -26,8 +26,21 @@
 #define OCRxC_16BIT(x)	(*(&_SFR_MEM16(x + 12)))
 
 
-static const u8t __bitToValue[] = {1,2,4,8,16,32,64,128};
-static const u8t __bitToValue_compl[] = {0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F};
+#define SPI0_MASTER_INIT do	{ \
+								DDRB = setBitValue(1, PB0) | setBitValue(1, PB1) | \
+								setBitValue(1, PB2) | setBitValue(0, PB3); \
+								PORTB |= bitValue(PB0);	\
+								} while(0);
+
+#define SPI0_SLAVE_INIT do	{ \
+								DDRB = setBitValue(0, PB0) | setBitValue(0, PB1) | \
+								setBitValue(0, PB2) | setBitValue(1, PB3); \
+								bitSet(SPCR, SPI_CFG_BIT_SPE); \
+								} while(0);
+
+
+constexpr u8t __bitToValue[] = {1,2,4,8,16,32,64,128};
+constexpr u8t __bitToValue_compl[] = {0xFE, 0xFD, 0xFB, 0xF7, 0xEF, 0xDF, 0xBF, 0x7F};
 
 #if defined(__COMPILE__)
 #if F_CPU == 16000000

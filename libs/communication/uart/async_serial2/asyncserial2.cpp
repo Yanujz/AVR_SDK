@@ -16,11 +16,11 @@ void AsyncSerial2::begin(HW_UART baud)
 }
 
 void AsyncSerial2::registerCallback(ser_cb_t *cb){
-	__hw_uart2_int.user_cb_vect = cb;
+	__hw_uart2_int.user_cb = cb;
 }
 
-void AsyncSerial2::registerCallback(SystemEventHandler *cb){
-	__hw_uart2_int.contex = cb;
+void AsyncSerial2::registerCallback(SystemEventHandler *context){
+	__hw_uart2_int.context = context;
 }
 
 
@@ -31,15 +31,15 @@ ISR(USART2_RX_vect){
 	if(asyncSerial2.echoIsEnabled()){
 		UDR2 = temp;
 	}
-	if(__hw_uart2_int.user_cb_vect != nullptr){
-		__hw_uart2_int.user_cb_vect();
+	if(nullptr != __hw_uart2_int.user_cb){
+		__hw_uart2_int.user_cb();
 	}
-	else if(__hw_uart2_int.contex != nullptr) {
-		SystemEventHandler::call_int_callback(__hw_uart2_int.contex, temp);
+	else if(nullptr != __hw_uart2_int.context) {
+		SystemEventHandler::call_int_callback(__hw_uart2_int.context, temp);
 	}
 }
 ISR(USART2_TX_vect){
-	if(asyncSerial2.is_tx_fifo_empty() == false) {
+	if(false == asyncSerial2.is_tx_fifo_empty()) {
 		UDR2 = asyncSerial2.pop_tx_fifo();
 	}
 }

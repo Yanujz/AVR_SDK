@@ -6,18 +6,16 @@ SlaveSPI0::SlaveSPI0() : SlaveSPI(){
 
 }
 
-void SlaveSPI0::begin(SPI_MODE mode, SPI_CLKSEL clock, SPI_DORD dataOrder)
+void SlaveSPI0::begin()
 {
-	SPCRx = &SPCR;
+	SPI0_SLAVE_INIT;
 
-	u16t cfg = mode | clock | dataOrder;
-
-	SlaveSPI::init(cfg, SPI0_DEFAULT_MISO, SPI0_DEFAULT_MOSI, SPI0_DEFAULT_SCK, SPI0_DEFAULT_SS);
+	SPIx_CFG_REG = SPI0_CFG_REG;
 }
 
 bool SlaveSPI0::isAvailable()
 {
-	return digitalRead(SPI0_DEFAULT_SS);
+	return !digitalRead(SPI0_DEFAULT_SS);
 }
 
 #endif

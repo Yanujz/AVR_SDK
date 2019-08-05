@@ -70,17 +70,15 @@ private:
 class SlaveSPI
 {
 public:
-	virtual void begin(SPI_MODE mode = MODE_0,
-																				SPI_CLKSEL clock = FOSC_BY_128,
-																				SPI_DORD dataOrder = MSB_FIRST) = 0;
+	virtual void begin() = 0;
 	void end();
 	u8t receive();
 protected:
 	SlaveSPI() {}
-	void init(u16t cfg, PIN miso, PIN mosi, PIN sck, PIN ss);
+	//void init();
 	virtual bool isAvailable() = 0;
 
-	volatile u8t* SPCRx;
+	volatile u8t* SPIx_CFG_REG;
 };
 
 #endif // SPISLAVE_H

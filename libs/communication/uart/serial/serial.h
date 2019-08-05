@@ -1,6 +1,5 @@
 #ifndef SERIAL_H
 #define SERIAL_H
-//#include <macros.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/setbaud.h>
@@ -8,6 +7,17 @@
 #include <systemevent.h>
 #include <printf.h>
 #include <core.h>
+
+
+
+
+#define UCSRxB_REG UART_UCSRxB_REG_OFFSET(UCSRxA)
+#define UCSRxC_REG UART_UCSRxC_REG_OFFSET(UCSRxA)
+#define UBRRxL_REG UART_UBRRxL_REG_OFFSET(UCSRxA)
+#define UBRRxH_REG UART_UBRRxH_REG_OFFSET(UCSRxA)
+#define UDRx_REG			UART_UDRx_REG_OFFSET(UCSRxA)
+
+
 
 
 

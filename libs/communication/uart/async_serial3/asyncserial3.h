@@ -9,7 +9,7 @@ public:
 	AsyncSerial3();
 	virtual void begin(HW_UART baud) override;
 	virtual void registerCallback(ser_cb_t* cb = nullptr) override;
-	virtual void registerCallback(SystemEventHandler* cb = nullptr) override;
+	virtual void registerCallback(SystemEventHandler* context = nullptr) override;
 };
 extern AsyncSerial3 asyncSerial3;
 #endif
