@@ -107,6 +107,9 @@ constexpr unsigned int toABS(int x){
 constexpr u16t toWord(u8t msb, u8t lsb){
 	return (msb << 8) | lsb;
 }
+//constexpr u32t toDoubleWord(u8t msb_h, u8t msb_l, u8t lsb_h, u8t lsb_l){
+//    return (msb_h << 24) | (msb_l << 16) | (lsb_h << 8) | lsb_l;
+//}
 #define regBitToValue(x) (1 << toU8(x))
 //#define bitValue(x) (1 << x)
 constexpr u8t bitValue(u8t x){
@@ -138,16 +141,7 @@ constexpr u8t calcDuty8bit(u8t duty){
 
 
 
-//---- UART MACROS ----//
-#define UART_UCSRxB_REG_OFFSET(x) (x  + 1)
-#define UART_UCSRxC_REG_OFFSET(x) (x  + 2)
-#define UART_UBRRxL_REG_OFFSET(x) (x  + 4)
-#define UART_UBRRxH_REG_OFFSET(x) (x  + 5)
-#define UART_UDRx_REG_OFFSET(x)   (x  + 6)
-
-
 
 //---- SPI MACROS ----//
-#define SPIx_STAT_REG_OFFSET(x) (x  + 1)
-#define SPIx_DATA_REG_OFFSET(x) (x  + 2)
+
 #endif

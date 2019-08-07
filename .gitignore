@@ -48,3 +48,9 @@ docs/doxygen/sample_text.conf
 docs/doxygen/README.md
 docs/doxygen/latex/Makefile
 examples/communication/uartTest/uart.creator.user.4.8-pre1
+docs/doxygen/html/index.qch
+docs/doxygen/html/index.qhp
+deploy/deploy.creator.user.1d1140e.4.9-pre1
+*.creator
+*.files
+*.config

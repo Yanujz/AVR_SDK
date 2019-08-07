@@ -80,7 +80,7 @@ const PROGMEM u8t adc_gain_vect[] = {
  * @param[in] autoTrigger Check _ADCSRB_AUTOTRIGGER enum
  * @return Value in millivolt
  */
-int32_t adc_compare(ADC_COMPARE compare, _ADMUX vRef = AVCC, _ADCSRA_PRESCALER prescaler = F_CPU_BY_16,
-                    _ADCSRB_AUTOTRIGGER autoTrigger = _ADCSRB_AUTOTRIGGER::ANALOG_COMPARATOR);
+int32_t adc_compare(ADC_COMPARE compare, ADC_VREF vRef = ADC_VREF::AVCC, ADCSRA_PRESCALER prescaler = ADCSRA_PRESCALER::F_CPU_BY_16,
+		    ADCSRB_AUTOTRIGGER autoTrigger = ADCSRB_AUTOTRIGGER::ANALOG_COMPARATOR);
 
 #endif

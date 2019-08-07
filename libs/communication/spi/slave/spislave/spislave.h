@@ -1,6 +1,10 @@
 #ifndef SPISLAVE_H
 #define SPISLAVE_H
-#include "spi.h"
+#include <spi.h>
+#include <avr/interrupt.h>
+#include <pins.h>
+#include <core.h>
+#include <common_structures.h>
 /*
 ///@file
 typedef void spi_cb_t(uint8_t data);

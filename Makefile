@@ -12,7 +12,8 @@ OBJ_DIR 	= $(BUILD_DIR)/obj
 ELF_DIR 	= $(BUILD_DIR)/elf
 PREPROC_DIR = $(BUILD_DIR)/prepoc
 LIBS_DIR	= $(SDK_PATH)/libs
-
+DOXYGEN_DIR = $(SDK_PATH)/docs/doxygen
+DOXYGEN_CFG = doxygen.conf
 # F_CPU
 F_CPU = 
 # PROGRAMMER 
@@ -173,10 +174,11 @@ atmega328p_upload: upload
 atmega328p_buildlib:
 	@make -C $(LIBS_DIR) atmega328p
 
-
-
-
-
+# Generate doxygen doc.
+doxygen:
+	@echo "Generating Documentation..."
+	@bash -c "(cd $(DOXYGEN_DIR) && doxygen $(DOXYGEN_CFG) 2>/dev/null)"
+	@echo "Done."
 
 # Show this help prompt.
 help:

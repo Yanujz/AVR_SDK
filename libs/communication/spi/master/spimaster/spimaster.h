@@ -1,14 +1,18 @@
 #ifndef SPIMASTER_H
 #define SPIMASTER_H
 #include <spi.h>
-
+#include <avr/interrupt.h>
+#include <pins.h>
+#include <core.h>
+#include <common_structures.h>
+using namespace core::mega::spi;
 
 class MasterSPI
 {
 public:
-	virtual void begin(SPI_MODE mode = MODE_0,
-																				SPI_CLKSEL clock = FOSC_BY_128,
-																				SPI_DORD dataOrder = MSB_FIRST) = 0;
+    virtual void begin(SPI_MODE mode = MODE_0,
+		       SPI_CLKSEL clock = FOSC_BY_128,
+		       SPI_DORD dataOrder = MSB_FIRST) = 0;
 	void end();
 	u8t transfer(u8t data);
 	void transfer(u8t *src, int size);

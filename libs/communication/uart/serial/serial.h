@@ -1,50 +1,41 @@
 #ifndef SERIAL_H
 #define SERIAL_H
-#include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/setbaud.h>
 #include <stdio.h>
 #include <systemevent.h>
 #include <printf.h>
 #include <core.h>
-
-
-
-
-#define UCSRxB_REG UART_UCSRxB_REG_OFFSET(UCSRxA)
-#define UCSRxC_REG UART_UCSRxC_REG_OFFSET(UCSRxA)
-#define UBRRxL_REG UART_UBRRxL_REG_OFFSET(UCSRxA)
-#define UBRRxH_REG UART_UBRRxH_REG_OFFSET(UCSRxA)
-#define UDRx_REG			UART_UDRx_REG_OFFSET(UCSRxA)
-
-
-
-
-
 ///@file
 
+/**
+  * !!!Warning!!!
+  * Variable "volatile u8t* UCSRxA" is used into define written into "[mcu_family]_common.h" file.
+  * It's just a trick in preprocessor to make code more readable.
+  * So please don't change name of it or change it according new value!
+  * Filename Ex: "mega_common.h"
+*/
 
 
 class Serial
 {
 public:
-	virtual void begin(HW_UART baud) = 0;
-	void end();
-	void printf(const char *fmt, ...);
-	void print(const char* str);
-	void print(char c);
-	void write(const char* buff, int size);
-	void readUntil(char *buffer, char chr);
-	void flush();
-	bool isAvailable();
-	char receive();
+    virtual void begin(HW_UART baud) = 0;
+    void end();
+    void printf(const char *fmt, ...);
+    void print(const char* str);
+    void print(char c);
+    void write(const char* buff, int size);
+    void readUntil(char *buffer, char chr);
+    void flush();
+    bool isAvailable();
+    char receive();
 
 protected:
-	Serial(){}
-	void init(HW_UART baud);
+    Serial(){}
+    void init(HW_UART baud);
 
-	volatile u8t* UCSRxA;
-
+    volatile u8t* UCSRxA;
 };
 
 
