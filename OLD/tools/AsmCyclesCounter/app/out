@@ -1,0 +1,161 @@
+; Tot cycles = 0->0*0.062500 = 0.000000uS
+
+
+<_Z4itoaPchih>:
+	push r14            ;2 Cycles         
+	push r15            ;2 Cycles         
+	push r17            ;2 Cycles         
+	push r28            ;2 Cycles         
+	push r29            ;2 Cycles         
+	movw r30, r24       ;1 Cycles         
+	ldi r19, 0xFE       ;1 Cycles         
+	add r19, r22        ;1 Cycles         
+	sbrs r21, 7         ;3 Cycles         
+	rjmp .+0            ;2 Cycles         
+	neg r21             ;1 Cycles         
+	neg r20             ;1 Cycles         
+	sbc r21, r1         ;1 Cycles         
+	ldi r17, 0x01       ;1 Cycles         
+	rjmp .+0            ;2 Cycles         
+	ldi r17, 0x00       ;1 Cycles         
+	mov r28, r18        ;1 Cycles         
+	ldi r29, 0x00       ;1 Cycles         
+	movw r14, r30       ;1 Cycles         
+	add r14, r19        ;1 Cycles         
+	adc r15, r1         ;1 Cycles         
+	movw r24, r20       ;1 Cycles         
+	movw r22, r28       ;1 Cycles         
+	call 0              ;5 Cycles         
+	movw r26, r24       ;1 Cycles         
+	subi r26, 0x00      ;1 Cycles         
+	sbci r27, 0x00      ;2 Cycles         
+	ld r24, X           ;2 Cycles         
+	movw r26, r14       ;1 Cycles         
+	st X, r24           ;2 Cycles         
+	subi r19, 0x01      ;1 Cycles         
+	movw r20, r22       ;1 Cycles         
+	or r22, r23         ;1 Cycles         
+	brne .+0            ;2 Cycles         
+	mov r24, r19        ;1 Cycles         
+	ldi r25, 0x00       ;1 Cycles         
+	and r17, r17        ;1 Cycles         
+	breq .+0            ;2 Cycles         
+	add r24, r30        ;1 Cycles         
+	adc r25, r31        ;1 Cycles         
+	ldi r18, 0x2D       ;1 Cycles         
+	movw r30, r24       ;1 Cycles         
+	st Z, r18           ;2 Cycles         
+	rjmp .+0            ;2 Cycles         
+	adiw r24, 0x01      ;2 Cycles         
+	add r24, r30        ;1 Cycles         
+	adc r25, r31        ;1 Cycles         
+	pop r29             ;2 Cycles         
+	pop r28             ;2 Cycles         
+	pop r17             ;2 Cycles         
+	pop r15             ;2 Cycles         
+	pop r14             ;2 Cycles         
+	ret                 ;5 Cycles         
+; Tot cycles = 83->83*0.062500 = 5.187500uS
+
+
+<_Z4ftoafPci>:
+	push r8             ;2 Cycles         
+	push r9             ;2 Cycles         
+	push r10            ;2 Cycles         
+	push r11            ;2 Cycles         
+	push r12            ;2 Cycles         
+	push r13            ;2 Cycles         
+	push r14            ;2 Cycles         
+	push r15            ;2 Cycles         
+	push r16            ;2 Cycles         
+	push r17            ;2 Cycles         
+	push r28            ;2 Cycles         
+	push r29            ;2 Cycles         
+	movw r8, r22        ;1 Cycles         
+	movw r10, r24       ;1 Cycles         
+	movw r28, r20       ;1 Cycles         
+	movw r16, r18       ;1 Cycles         
+	call 0              ;5 Cycles         
+	movw r12, r22       ;1 Cycles         
+	movw r14, r24       ;1 Cycles         
+	mov r0, r23         ;1 Cycles         
+	add r0, r0          ;1 Cycles         
+	sbc r24, r24        ;1 Cycles         
+	sbc r25, r25        ;1 Cycles         
+	call 0              ;5 Cycles         
+	movw r18, r22       ;1 Cycles         
+	movw r20, r24       ;1 Cycles         
+	movw r24, r10       ;1 Cycles         
+	movw r22, r8        ;1 Cycles         
+	call 0              ;5 Cycles         
+	ldi r18, 0x00       ;1 Cycles         
+	ldi r19, 0x40       ;1 Cycles         
+	ldi r20, 0x1C       ;1 Cycles         
+	ldi r21, 0x46       ;1 Cycles         
+	call 0              ;5 Cycles         
+	call 0              ;5 Cycles         
+	movw r20, r22       ;1 Cycles         
+	sbrs r23, 7         ;3 Cycles         
+	rjmp .+0            ;2 Cycles         
+	eor r20, r20        ;1 Cycles         
+	eor r21, r21        ;1 Cycles         
+	sub r20, r22        ;1 Cycles         
+	sbc r21, r23        ;1 Cycles         
+	ldi r18, 0x0A       ;1 Cycles         
+	ldi r22, 0x20       ;1 Cycles         
+	movw r24, r28       ;1 Cycles         
+	call 0              ;5 Cycles         
+	movw r18, r28       ;1 Cycles         
+	subi r18, 0xE1      ;1 Cycles         
+	sbci r19, 0xFF      ;2 Cycles         
+	sub r18, r24        ;1 Cycles         
+	sbc r19, r25        ;1 Cycles         
+	cp r18, r16         ;1 Cycles         
+	cpc r19, r17        ;1 Cycles         
+	brge .+0            ;2 Cycles         
+	movw r22, r16       ;1 Cycles         
+	subi r22, 0x01      ;1 Cycles         
+	sbc r23, r1         ;1 Cycles         
+	movw r30, r24       ;1 Cycles         
+	ldi r18, 0x00       ;1 Cycles         
+	ldi r19, 0x00       ;1 Cycles         
+	ldi r20, 0x30       ;1 Cycles         
+	subi r18, 0xFF      ;1 Cycles         
+	sbci r19, 0xFF      ;2 Cycles         
+	cp r16, r18         ;1 Cycles         
+	cpc r17, r19        ;1 Cycles         
+	brne .+0            ;2 Cycles         
+	sub r24, r22        ;1 Cycles         
+	sbc r25, r23        ;1 Cycles         
+	rjmp .+0            ;2 Cycles         
+	st -Z, r20          ;2 Cycles         
+	rjmp .+0            ;2 Cycles         
+	movw r30, r24       ;1 Cycles         
+	ldi r24, 0x2E       ;1 Cycles         
+	st -Z, r24          ;2 Cycles         
+	mov r24, r30        ;1 Cycles         
+	sub r24, r28        ;1 Cycles         
+	ldi r22, 0x01       ;1 Cycles         
+	add r22, r24        ;1 Cycles         
+	ldi r18, 0x0A       ;1 Cycles         
+	movw r20, r12       ;1 Cycles         
+	movw r24, r28       ;1 Cycles         
+	pop r29             ;2 Cycles         
+	pop r28             ;2 Cycles         
+	pop r17             ;2 Cycles         
+	pop r16             ;2 Cycles         
+	pop r15             ;2 Cycles         
+	pop r14             ;2 Cycles         
+	pop r13             ;2 Cycles         
+	pop r12             ;2 Cycles         
+	pop r11             ;2 Cycles         
+	pop r10             ;2 Cycles         
+	pop r9              ;2 Cycles         
+	pop r8              ;2 Cycles         
+	jmp 0               ;3 Cycles         
+; Tot cycles = 155->155*0.062500 = 9.687500uS
+
+
+; Tot cycles = 0->0*0.062500 = 0.000000uS
+
+

@@ -1,4 +1,4 @@
-SDK_PATH = $(shell realpath ~/Documents/GitHub/AVR_SDK)
+SDK_PATH = $(shell realpath ~/Documenti/GitHub/AVR_SDK)
 ifeq ($(SDK_PATH), ) 
     $(error SDK_PATH do not exists, please set corret SDK_PATH into makefile)
 endif 
@@ -12,8 +12,8 @@ OBJ_DIR 	= $(BUILD_DIR)/obj
 ELF_DIR 	= $(BUILD_DIR)/elf
 PREPROC_DIR = $(BUILD_DIR)/prepoc
 LIBS_DIR	= $(SDK_PATH)/libs
-DOXYGEN_DIR = $(SDK_PATH)/docs/doxygen
-DOXYGEN_CFG = doxygen.conf
+TOOLS_DIR 	= $(SDK_PATH)/tools
+
 # F_CPU
 F_CPU = 
 # PROGRAMMER 
@@ -32,10 +32,13 @@ COM_PORT ?= /dev/ttyUSB0
 # Com Baudrate (default: 1000000)
 COM_BAUDRATE ?= 1000000
 
+FLASH_SIZE ?= 0
+RAM_SIZE ?= 0
+EEPROM_SIZE ?= 0
 
 #
 CXX = avr-g++
-CC  = avr-gcc
+CC  = avr-gcc-9.1.0
 
 #
 C_SRCS := $(shell find $(SRC_DIR)/ -type f -regex ".*\.c") 
@@ -59,7 +62,7 @@ INCLUDE_DIR := -I /usr/lib/avr/include \
 
 #
 CXX_FLAGS = -nostdlib -std=c++11 -Wmain -Wextra -fdata-sections -ffunction-sections \
-			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
+			-funsigned-char -Wno-expansion-to-defined -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
 #
 CC_FLAGS  = -nostdlib -std=gnu99 -Wmain -Wextra -fdata-sections -ffunction-sections \
 			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
@@ -85,7 +88,8 @@ main.elf: $(C_OBJS) $(CXX_OBJS) $(ASM_OBJS)
 # Show Memory Usage
 size:
 	@echo ''
-	@avr-size --format=avr  -C --mcu=$(MICRO) $(ELF_DIR)/main.elf
+	@bash -c ". $(TOOLS_DIR)/yanujzSize/yanujzSize $(ELF_DIR)/main.elf $(MICRO) $(FLASH_SIZE) $(RAM_SIZE) $(EEPROM_SIZE)"
+#@avr-size --format=avr  -C --mcu=$(MICRO) $(ELF_DIR)/main.elf
 
 
 %.o: %.c
@@ -115,6 +119,14 @@ rawMonitor:
 	@killall hexdump putty 2>/dev/null || true
 	rawSerialMonitor $(COM_PORT) $(COM_BAUDRATE)
 
+# Update Qt Files	
+updateQtFiles:
+	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles"
+
+# Update Qt Files	
+updateQtFiles_deploy:
+	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles deploy"
+
 # 
 createdir: $(BUILD_DIR) 
 
@@ -138,6 +150,11 @@ atmega2560: MPROG := m2560
 #
 atmega2560: MICRO := atmega2560
 atmega2560: F_CPU := 16000000
+atmega2560: CXX_FLAGS += -D__MCU_ATMEGA2560__
+atmega2560: CC_FLAGS += -D__MCU_ATMEGA2560__
+atmega2560: FLASH_SIZE := 262144
+atmega2560: RAM_SIZE := 8192
+atmega2560: EEPROM_SIZE := 4096
 atmega2560: createdir $(C_OBJS) $(CXX_OBJS) $(ASM_OBJS) main.elf app size
 
 # Upload to an atmega2560 target. (FLASH_PORT = /dev/ttyACM0, FLASH_BAUDRATE = 115200)
@@ -159,6 +176,11 @@ atmega328p: MPROG := m328p
 #
 atmega328p: MICRO := atmega328p
 atmega328p: F_CPU := 16000000
+atmega328p: CXX_FLAGS += -D__MCU_ATMEGA328P__
+atmega328p: CC_FLAGS += -D__MCU_ATMEGA328P__
+atmega328p: FLASH_SIZE := 32768
+atmega328p: RAM_SIZE := 2048
+atmega328p: EEPROM_SIZE := 1024	
 atmega328p: createdir $(C_OBJS) $(CXX_OBJS) $(ASM_OBJS) main.elf app size
 
 # Upload to an atmega328p target. (FLASH_PORT = /dev/ttyUSB0, FLASH_BAUDRATE = 115200)
@@ -174,11 +196,7 @@ atmega328p_upload: upload
 atmega328p_buildlib:
 	@make -C $(LIBS_DIR) atmega328p
 
-# Generate doxygen doc.
-doxygen:
-	@echo "Generating Documentation..."
-	@bash -c "(cd $(DOXYGEN_DIR) && doxygen $(DOXYGEN_CFG) 2>/dev/null)"
-	@echo "Done."
+
 
 # Show this help prompt.
 help:

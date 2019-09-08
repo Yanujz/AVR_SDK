@@ -1,0 +1,7 @@
+#pragma once
+#define UNKNOWN 0
+#define BOARD_ARDUINO_MEGA2560_R3 1
+#define MCU_ATMEGA2560 2
+#define BOARD_ARDUINO_UNO_R3 3
+#define MCU_ATMEGA328P 4
+#define MCU_ATMEGA328PB 5

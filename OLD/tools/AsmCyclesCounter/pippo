@@ -1,0 +1,33 @@
+<_Z6microsv>:
+	cli                 ;1 Cycles         
+	lds r24, 0x0000     ;2 Cycles         
+	mov r25, r24        ;1 Cycles         
+	sei                 ;1 Cycles         
+	in r21, 0x26        ;1 Cycles         
+	swap r21            ;1 Cycles         
+	andi r21, 0x0F      ;1 Cycles         
+	andi r25, 0xF0      ;1 Cycles         
+	swap r25            ;1 Cycles         
+	andi r24, 0x0F      ;1 Cycles         
+	swap r24            ;1 Cycles         
+	add r24, r21        ;1 Cycles         
+	ret                 ;5 Cycles         
+; Tot cycles = 18->18*0.062500 = 1.125000uS
+
+
+<__vector_21>:
+	push r24            ;2 Cycles         
+	lds r24, 0x0000     ;2 Cycles         
+	inc r24             ;1 Cycles         
+	sts 0x0000, r24     ;2 Cycles         
+	pop r24             ;2 Cycles         
+	reti                ;5 Cycles         
+; Tot cycles = 14->14*0.062500 = 0.875000uS
+
+
+<__vector_default>:
+	nop                 ;1 Cycles         
+	reti                ;5 Cycles         
+; Tot cycles = 6->6*0.062500 = 0.375000uS
+
+

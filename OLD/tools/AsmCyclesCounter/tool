@@ -1,0 +1,21 @@
+#!/bin/bash
+#avr-objdump -t -C isr.o | grep '.text' | sed -n '1!p' | cut -c -8,32-
+
+#VAR=$(echo $1 | g++ -x c++ -S - -o- | grep "^_.*:$" | sed -e 's/:$//')
+#VAR="avr-objdump -d $2 | awk -v RS= '/^[[:xdigit:]]+ <${VAR}>/'"
+#eval "$VAR" > dumped
+
+LINE_COUNT=$(avr-objdump -t -C isr.o | grep '.text' | wc -l)
+for i in $( eval echo {2..$LINE_COUNT} )
+do
+
+NOMANGLED=$(avr-objdump -t -C isr.o | grep '.text' | sed -n "${i}p" | cut -c -8,32-;)
+MANGLED=$(avr-objdump -t isr.o | grep '.text' | sed -n "${i}p" | cut -c 32-;)
+VAR="avr-objdump -d isr.o | awk -v RS= '/^[[:xdigit:]]+ <$(echo -e ${MANGLED} | tr -d '[:space:]')>/'"
+ 
+echo ${NOMANGLED}${MANGLED}
+eval "$VAR"
+done
+
+
+

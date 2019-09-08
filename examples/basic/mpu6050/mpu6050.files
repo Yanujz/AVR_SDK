@@ -1,5 +1,0 @@
-src/miaclasse/miaclasse.cpp
-src/miaclasse/miaclasse.h
-libs/avr_sdk.h
-
-src/main.cpp

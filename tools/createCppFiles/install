@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Installing..."
+path="`(cd $(dirname \"$0\") && pwd )`"  # absolutized and normalized
+sudo cp $path/createCppFiles /usr/local/bin
+sudo chmod +x /usr/local/bin/createCppFiles
+echo "Done."

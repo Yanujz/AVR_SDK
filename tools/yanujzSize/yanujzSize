@@ -1,0 +1,42 @@
+#!/bin/bash
+# $1 filename
+# $2 mcu_name
+# $3 flash_size
+# $4 ram_size
+# $5 eeprom_size
+set -e
+sectionData=($(avr-size -A $1 |  grep .data | awk '{printf "%u 0x%X", $2,$3}'))
+sectionText=($(avr-size -A $1 |  grep .text | awk '{printf "%u 0x%X", $2,$3}'))
+sectionBss=($(avr-size -A $1 |  grep .bss | awk '{printf "%u 0x%X", $2,$3}'))
+sectionEEPROM=($(avr-size -A $1 |  grep .eeprom | awk '{printf "%u 0x%X", $2,$3}'))
+if [ -z "${sectionBss[0]}" ]; then
+      sectionBss[0]="0"
+fi
+
+echo "Memory Usage"
+echo "------------"
+printf "Device: $2\\n"
+printf "Section Data:\\n Size: ${sectionData[0]} Bytes\\n Address: $(printf "0x%X" ${sectionData[1]})\\n"
+printf "Section Bss:\\n Size: ${sectionBss[0]} Bytes\\n Address: $(printf "0x%X" ${sectionBss[1]})\\n"
+printf "Section Text:\\n Size: ${sectionText[0]} Bytes\\n Address: $(printf "0x%06X" ${sectionText[1]})\\n"
+if [[ ${sectionEEPROM[0]} ]]; then
+printf "Section EEPROM:\\n Size: ${sectionEEPROM[0]} Bytes\\n Address: $(printf "0x%X" ${sectionEEPROM[1]})\\n"
+fi
+printf "\\n"
+
+programSize=$((${sectionData[0]} + ${sectionText[0]}))
+programPercentage=$(echo "$programSize $3" | awk '{printf "%0.2f", ($1*100)/$2}')
+dataSize=$((${sectionData[0]} + ${sectionBss[0]}))
+dataPercentage=$(echo "$dataSize $4" | awk '{printf "%0.2f", ($1*100)/$2}')
+
+
+echo "Program: $programSize/$3 Bytes ($programPercentage%)"
+printf "(.text + .data)\\n"
+echo "Data: $dataSize/$4 Bytes ($dataPercentage%)"
+printf "(.data + .bss)\\n"
+
+if [[ ${sectionEEPROM[0]} ]]; then
+	eepromPercentage=$(echo "${sectionEEPROM[0]} $5" | awk '{printf "%0.2f", ($1*100/$2)}')
+	echo "EEPROM : ${sectionEEPROM[0]}/$5 Bytes($eepromPercentage%)"
+	echo "(.eeprom)"
+fi

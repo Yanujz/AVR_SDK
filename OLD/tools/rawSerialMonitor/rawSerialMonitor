@@ -1,0 +1,65 @@
+#!/bin/bash
+
+#abort on error
+set -e
+
+function usage
+{
+    echo "usage: rawMonitorSerial -p [port] -b [baudrate]"
+    echo "   ";
+    echo "  -p | --port       : Specify Port name";
+    echo "  -b | --baudrate   : Specify baudrate";
+    echo "  -h | --help       : Prompt usage message";
+    echo "   ";
+    echo "Example: ./rawSerialMonitor -p /dev/ttyACM0 -b 115200";
+}
+
+function parse_args
+{
+  # positional args
+  args=()
+
+  # named args
+  while [ "$1" != "" ]; do
+      case "$1" in
+          -p | --port )               port="$2";         shift;;
+          -b | --baudrate )           baudrate="$2";     shift;;
+          -h | --help )               usage;             exit;; # quit and show usage
+          * )                         args+=("$1")             # if no match, add it to the positional args
+      esac
+      shift # move to next kv pair
+  done
+
+  # restore positional args
+  set -- "${args[@]}"
+
+  # set positionals to vars
+  positional_1="${args[0]}"
+  positional_2="${args[1]}"
+
+  # validate required args
+  if [[ -z "${port}" || -z "${baudrate}" ]]; then
+      echo "Invalid arguments"
+      usage
+      exit;
+  fi
+
+}
+
+
+function run
+{
+  parse_args "$@"
+
+  sudo stty -F $port raw
+  sudo stty -F $port -echo -echoe -echok
+  sudo stty -F $port $baudrate
+
+  sudo cat $port | hexdump -v -e '/1 "%02X "' -e '/1 "%03d "' -e '/1 "%c\n"'
+
+
+}
+
+
+
+run "$@";

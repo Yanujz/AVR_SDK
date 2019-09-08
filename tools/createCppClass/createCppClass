@@ -1,0 +1,60 @@
+#!/bin/bash
+
+if [ $# -eq 0 ]
+then
+  echo "Usage:"
+  echo -e "createCppClass [className] [path]\n"
+  echo "Example:"
+  echo "createCppClass MyClass random/path"
+  exit 0
+fi
+
+if [ -z "$2" ]
+then
+    _PATH=.
+else
+  _PATH=${2,,}
+    if [ ! -d "${_PATH}" ];
+    then
+      read -p "Missing folder, do you want to create it? " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        mkdir -p $_PATH
+        echo ""
+      else
+        echo "Leaving"
+        exit 0
+    fi
+  else
+    read -p "Path alredy exists, do you want overwrite it? " -n 1 -r
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        mkdir -p $_PATH
+        echo ""
+      else
+        echo "Leaving"
+        exit 0
+    fi
+  fi
+fi
+
+NAME_LOWERCASE=${1,,}
+NAME_UPPERCASE=${1^^}
+
+NAME_UPPER_CAMEL=${1,,}
+NAME_UPPER_CAMEL=${NAME_UPPER_CAMEL^}
+
+
+
+H_HEADER="#ifndef ${NAME_UPPERCASE}_H\n#define ${NAME_UPPERCASE}_H\n\n"
+H_BODY="class ${NAME_UPPER_CAMEL}\n{\npublic:\n//---- Methods ----//\n\t${NAME_UPPER_CAMEL}();\n\t~${NAME_UPPER_CAMEL}();\n\n//---- Variables ----//\n\nprivate:\n//---- Methods ----//\n\n//---- Variables ----//\n\n};\n\n"
+H_FOOTER="#endif // ${NAME_UPPERCASE}_H" 
+
+CPP="#include \"${NAME_LOWERCASE}.h\"\n\n\n${NAME_UPPER_CAMEL}::${NAME_UPPER_CAMEL}(){\n\n}\n\n${NAME_UPPER_CAMEL}::~${NAME_UPPER_CAMEL}(){\n\n}"
+
+
+
+touch $_PATH/${NAME_LOWERCASE}.h $_PATH/${NAME_LOWERCASE}.cpp
+echo -e  $H_HEADER$H_BODY$H_FOOTER >> $_PATH/${NAME_LOWERCASE}.h 
+echo -e  $CPP >> $_PATH/${NAME_LOWERCASE}.cpp 
+echo "Done"

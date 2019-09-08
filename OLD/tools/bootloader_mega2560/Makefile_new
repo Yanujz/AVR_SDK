@@ -1,0 +1,14 @@
+all:
+	avr-gcc -c -mmcu=atmega2560 -I. -gdwarf-2 -DF_CPU=16000000UL \
+	-Os -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums \
+	-fno-jump-tables -Wall -Wstrict-prototypes -Wa,-adhlns=main.lst \
+	-std=gnu99 -D_MEGA_BOARD_ -MD -MP -MF .dep/main.o.d main.c -o main.o 
+	avr-gcc -mmcu=atmega2560 -I. -gdwarf-2 -DF_CPU=16000000UL  -Os -funsigned-char \
+		-funsigned-bitfields -fpack-struct -fshort-enums -fno-jump-tables -Wall \
+		-Wstrict-prototypes -Wa,-adhlns=main.o  -std=gnu99 -D_MEGA_BOARD_ -MD -MP -MF \
+		.dep/stk500boot.elf.d main.o --output stk500boot.elf -Wl,-Map=stk500boot.map,--cref \
+		-lm -Wl,--section-start=.text=3E000
+	avr-objcopy -O ihex -R .eeprom stk500boot.elf stk500boot.hex
+	avrdude -v -V -e -p atmega2560 -c atmelice_isp -U flash:w:stk500boot.hex \
+			-U lfuse:w:0xff:m -U hfuse:w:0xd8:m -U efuse:w:0xfd:m -U lock:w:0xFF:m
+

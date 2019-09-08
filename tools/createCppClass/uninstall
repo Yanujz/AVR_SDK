@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Removing files..."
+if [ -f /usr/local/bin/createCppClass ]; then 
+	$(sudo rm /usr/local/bin/createCppClass)
+fi
+echo "Done."

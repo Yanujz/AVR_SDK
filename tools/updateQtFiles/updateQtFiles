@@ -1,0 +1,48 @@
+#!/bin/bash
+SDK_PATH=$(realpath ~/Documenti/GitHub/AVR_SDK)
+
+ if [[ -z "${SDK_PATH}" ]]; then
+      echo "SDK_PATH invalid!"
+      exit;
+  fi
+
+SDK_LIB_PATH=$SDK_PATH/libs
+DEFAULT_FILE="src/main.cpp"
+DEFAULT_INCLUDE="src\\n"
+
+case $(uname | tr '[:upper:]' '[:lower:]') in
+  linux*)
+    DEFAULT_INCLUDE+="/usr/lib/avr/include"
+    ;;
+  darwin*)
+    DEFAULT_INCLUDE+="/usr/local/Cellar/avr-gcc/9.1.0/avr/include/"
+    ;;
+  msys*)
+    
+    ;;
+  *)
+    
+    ;;
+esac
+
+
+if [[ ! -z "$1" ]] && [[ "$1" == "deploy" ]]; then
+  FILES=$(realpath $(find ${SDK_LIB_PATH} -name '*.h' -o  -name '*.cpp' -o  -name '*.c' -o  -name '*.hpp'))
+
+else
+  FILES=$(find  src -name '*.h' -o  -name '*.cpp' -o  -name '*.c' -o  -name '*.hpp')
+fi
+
+_PATH=$(realpath $(find ${SDK_LIB_PATH} -name '*.h' -exec dirname {} \; -o  -name '*.cpp' -exec dirname {} \; -o  -name '*.c' -exec dirname {} \; -o -name '*.hpp' -exec dirname {} \;) | sort | uniq)
+_PATH+=$(realpath $(find src -name '*.h' -exec dirname {} \; -o  -name '*.cpp' -exec dirname {} \; -o  -name '*.c' -exec dirname {} \; -o -name '*.hpp' -exec dirname {} \;) | sort | uniq)
+INCLUDE_FILE=$(ls *.includes)
+FILES_FILE=$(ls *.files)
+
+printf "Writing .files\n"
+printf "$DEFAULT_FILE\n" > ${FILES_FILE}
+printf '%s\n' "${FILES[@]}" >> $FILES_FILE
+printf "Writing .includes\n"
+printf "$DEFAULT_INCLUDE\n" > ${INCLUDE_FILE}
+printf '%s\n' "${_PATH[@]}" >> $INCLUDE_FILE
+printf "Done.\n"
+

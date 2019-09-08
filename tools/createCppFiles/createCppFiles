@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#abort on error
+set -e
+
+function usage
+{
+    echo "usage: createCppFiles -n <name>"
+    echo "   ";
+    echo "  -n | --name       : Specify project name";
+    echo "     | --version    : Show Version";
+    echo "  -h | --help       : Prompt usage message";
+    echo " Example:"
+    echo "./createCppFiles -n test"
+}
+version=0.1
+function showVersion
+{
+	printf "Version %s\r\n" $version
+}
+
+function parse_args
+{
+  # positional args
+  args=()
+
+  # named args
+  while [ "$1" != "" ]; do
+      case "$1" in
+      	-n | --name )               name="$2";        shift;;
+		--version) showVersion; shift;;
+        -h | --help )               usage;            exit;; # quit and show usage
+        * )                         args+=("$1")             # if no match, add it to the positional args
+      esac
+      shift # move to next kv pair
+  done
+
+  # validate required args
+  if [[ -z "${name}" ]]; then
+      echo "Invalid argument"
+      usage
+      exit;
+  fi
+
+}
+function createFiles
+{
+	echo -e "#pragma once" > ${name}.h
+  	echo -e "#include <${name}.h>" > ${name}.cpp
+}
+
+
+function run
+{
+	parse_args "$@"
+	createFiles
+}
+
+
+
+run "$@";
