@@ -5,7 +5,7 @@
 #include <mega_usart_vfprintf.h>
 
 using namespace core::mega::uart;
-
+using namespace core::mega::common_typef;
 void usart_init(USART usart, HW_UART baud);
 
 void usart_end(USART usart);
@@ -18,7 +18,7 @@ void usart_print(USART usart, char c);
 
 void usart_write(USART usart, const char *buff, int size);
 
-void usart_readUntil(USART usart, char *buffer, char chr);
+void usart_readUntil(USART usart, char *buff, int size, char chr);
 
 void usart_flush(USART usart);
 

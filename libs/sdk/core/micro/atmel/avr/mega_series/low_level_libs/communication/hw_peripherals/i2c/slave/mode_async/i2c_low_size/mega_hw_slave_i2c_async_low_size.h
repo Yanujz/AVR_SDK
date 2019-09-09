@@ -5,7 +5,7 @@
 #include <avr/interrupt.h>
 
 
-
+/*
 
 static void (*I2C_recv)(uint8_t);
 static void (*I2C_req)();
@@ -34,5 +34,5 @@ void I2C_stop(void)
   TWAR = 0;
   sei();
 }
-
+*/
 #endif

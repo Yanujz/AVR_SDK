@@ -3,177 +3,185 @@
 
 void i2c_master_init(I2C iface, F_SCL freq)
 {
-    *(volatile u8t*)(iface) = toU8(freq);
+  ((TWI_TypeDef*)iface)->TWBR = toU8(freq);
 }
 
 void i2c_master_end(I2C iface)
 {
-    *toIntPtr(iface) = 0;
+  ((TWI_TypeDef*)iface)->TWBR = 0;
 }
 
-bool i2c_master_start(I2C iface, u8t address)
+bool i2c_master_start(I2C iface, u8 address)
 {
-    // reset TWI control register
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = 0;
-    // transmit START condition
-	*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWSTAx) | setBitValue(1, TWENx);
-    // wait for end of transmission
-    while( !(*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) & bitValue(TWINTx)) );
+  // reset TWI control register
+  ((TWI_TypeDef*)iface)->TWCR= 0;
 
-    // check if the start condition was successfully transmitted
-    if((*I2Cx_STAT_REG_OFFSET((volatile u8t*)(iface)) & I2C_STAT_MASK) != TW_START){
+  // transmit START condition
+  ((TWI_TypeDef*)iface)->TWCR = START_CONDITION;
+
+  // wait for end of transmission
+  while( !(((TWI_TypeDef*)iface)->TWCR & bitValue(TWINTx)) );
+
+  // check if the start condition was successfully transmitted
+  if((((TWI_TypeDef*)iface)->TWSR & I2C_STAT_MASK) != TW_START){
 	return false;
-    }
+  }
 
-    // load slave address into data register
-    *I2Cx_DATA_REG_OFFSET((volatile u8t*)(iface)) = address;
-    // start transmission of address
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWENx);
-    // wait for end of transmission
-    while( !(*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) & bitValue(TWINTx)) );
+  // load slave address into data register
+  ((TWI_TypeDef*)iface)->TWDR = address;
 
-    // check if the device has acknowledged the READ / WRITE mode
-    u8t stat = *I2Cx_STAT_REG_OFFSET((volatile u8t*)(iface)) & I2C_STAT_MASK;
-    if ( (stat != TW_MT_SLA_ACK) && (stat != TW_MR_SLA_ACK) ){
+  // start transmission of address
+  ((TWI_TypeDef*)iface)->TWCR = START_TRASMISSION;
+  // wait for end of transmission
+  while( !(((TWI_TypeDef*)iface)->TWCR & bitValue(TWINTx)) );
+
+  // check if the device has acknowledged the READ / WRITE mode
+  u8 stat = ((TWI_TypeDef*)iface)->TWSR & I2C_STAT_MASK;
+  if ( (stat != TW_MT_SLA_ACK) && (stat != TW_MR_SLA_ACK) ){
 	return false;
-    }
+  }
 
-    return true;
+  return true;
 }
 
 void i2c_master_stop(I2C iface)
 {
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWENx) | setBitValue(1, TWSTOx);
+  ((TWI_TypeDef*)iface)->TWCR = STOP_CONDITION;
 }
 
-bool i2c_master_send(I2C iface, u8t data)
+bool i2c_master_send(I2C iface, u8 data)
 {
-    // load data into data register
-    *I2Cx_DATA_REG_OFFSET((volatile u8t*)(iface)) = data;
-    // start transmission of data
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWENx);
-    // wait for end of transmission
-    while( !(*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) & bitValue(TWINTx)) );
+  // load data into data register
+  ((TWI_TypeDef*)iface)->TWDR = data;
 
-    if( (*I2Cx_STAT_REG_OFFSET((volatile u8t*)(iface)) & I2C_STAT_MASK) != TW_MT_DATA_ACK ){
+  // start transmission of data
+  ((TWI_TypeDef*)iface)->TWCR = START_TRASMISSION;
+
+  // wait for end of transmission
+  while( !(((TWI_TypeDef*)iface)->TWCR & bitValue(TWINTx)) );
+
+  if( (((TWI_TypeDef*)iface)->TWSR & I2C_STAT_MASK) != TW_MT_DATA_ACK ){
 	return false;
-    }
-    return true;
+  }
+  return true;
 }
 
-bool i2c_master_send(I2C iface, u8t *buff, int size)
+bool i2c_master_send(I2C iface, u8 *buff, int size)
 {
-    bool res = false;
-    while (size--) {
+  bool res = false;
+  while (size--) {
 	res = i2c_master_send(iface, *buff++);
-    }
-    return res;
+  }
+  return res;
 }
 
-bool i2c_master_send(I2C iface, u8t address, u8t *buff, int size)
+bool i2c_master_send(I2C iface, u8 address, u8 *buff, int size)
 {
-    if (false == i2c_master_start(iface, address | I2C_WRITE))
-    {
+  if (false == i2c_master_start(iface, address | I2C_WRITE))
+  {
 	return false;
-    }
-    while (size--) {
+  }
+  while (size--) {
 	if(false == i2c_master_send(iface, *buff++)){
-	    return  false;
+	  return  false;
 	}
-    }
-    i2c_master_stop(iface);
+  }
+  i2c_master_stop(iface);
 
-    return 0;
+  return 0;
 }
 
-u8t i2c_master_receive(I2C iface, u8t address)
+u8 i2c_master_receive(I2C iface, u8 address)
 {
-    if (false == i2c_master_start(iface, address | I2C_READ)){
+  if (false == i2c_master_start(iface, address | I2C_READ)){
 	return 0;
-    }
-    u8t data = i2c_master_read_sendNack(iface);
+  }
+  u8 data = i2c_master_read_sendNack(iface);
 
-    i2c_master_stop(iface);
+  i2c_master_stop(iface);
 
-    return data;
+  return data;
 }
 
-bool i2c_master_receive(I2C iface, u8t address, u8t *buff, int size)
+bool i2c_master_receive(I2C iface, u8 address, u8 *buff, int size)
 {
-    if (false == i2c_master_start(iface, address | I2C_READ)){
+  if (false == i2c_master_start(iface, address | I2C_READ)){
 	return false;
-    }
+  }
 
-    for (int i = 0; i < (size-1); i++)
-    {
+  for (int i = 0; i < (size-1); i++)
+  {
 	buff[i] = i2c_master_read_sendAck(iface);
-    }
-    buff[(size-1)] = i2c_master_read_sendNack(iface);
+  }
+  buff[(size-1)] = i2c_master_read_sendNack(iface);
 
-    i2c_master_stop(iface);
+  i2c_master_stop(iface);
 
-    return true;
+  return true;
 }
 
-bool i2c_master_writeReg(I2C iface, u8t devaddr, u8t regaddr, u8t *buff, int size)
+bool i2c_master_writeReg(I2C iface, u8 devaddr, u8 regaddr, u8 *buff, int size)
 {
-    if (false == i2c_master_start(iface, devaddr | I2C_WRITE)){
+  if (false == i2c_master_start(iface, devaddr | I2C_WRITE)){
 	return false;
-    }
+  }
 
-    i2c_master_send(iface, regaddr);
-    while (size--) {
+  i2c_master_send(iface, regaddr);
+  while (size--) {
 	if(false == i2c_master_send(iface, *buff++)){
-	    return  false;
+	  return  false;
 	}
-    }
+  }
 
-    i2c_master_stop(iface);
+  i2c_master_stop(iface);
 
-    return true;
+  return true;
 }
 
-bool i2c_master_readReg(I2C iface, u8t devAddr, u8t regAddr, u8t *buff, int size)
+bool i2c_master_readReg(I2C iface, u8 devAddr, u8 regAddr, u8 *buff, int size)
 {
-    if (false == i2c_master_start(iface, devAddr)){
+  if (false == i2c_master_start(iface, devAddr)){
 	return false;
-    }
+  }
 
-    i2c_master_send(iface, regAddr);
+  i2c_master_send(iface, regAddr);
 
-    if (false == i2c_master_start(iface, devAddr | I2C_READ)){
+  if (false == i2c_master_start(iface, devAddr | I2C_READ)){
 	return false;
-    }
+  }
 
-    for (int i = 0; i < (size-1); i++)
-    {
+  for (int i = 0; i < (size-1); i++)
+  {
 	buff[i] = i2c_master_read_sendAck(iface);
-    }
-    buff[(size-1)] = i2c_master_read_sendNack(iface);
+  }
+  buff[(size-1)] = i2c_master_read_sendNack(iface);
 
-    i2c_master_stop(iface);
+  i2c_master_stop(iface);
 
-    return true;
+  return true;
 }
 
-u8t i2c_master_read_sendAck(I2C iface)
+u8 i2c_master_read_sendAck(I2C iface)
 {
-    // start TWI module and acknowledge data after reception
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWENx) | setBitValue(1, TWEAx);
-    // wait for end of transmission
-    while( !(*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) & bitValue(TWINTx)) );
-    // return received data from TWDR
-    return *I2Cx_DATA_REG_OFFSET((volatile u8t*)(iface));
+  // start TWI module and acknowledge data after reception
+  ((TWI_TypeDef*)iface)->TWCR = START_AND_ACK;
+
+  // wait for end of transmission
+  while( !(((TWI_TypeDef*)iface)->TWCR & bitValue(TWINTx)) );
+
+  // return received data from TWDR
+  return ((TWI_TypeDef*)iface)->TWDR;
 }
 
-u8t i2c_master_read_sendNack(I2C iface)
+u8 i2c_master_read_sendNack(I2C iface)
 {
+  // start receiving without acknowledging reception
+  ((TWI_TypeDef*)iface)->TWCR = START_TRASMISSION;
 
-    // start receiving without acknowledging reception
-    *I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) = setBitValue(1, TWINTx) | setBitValue(1, TWENx);
-    // wait for end of transmission
-    while( !(*I2Cx_CTRL_REG_OFFSET((volatile u8t*)(iface)) & bitValue(TWINTx)) );
-    // return received data from TWDR
-    return *I2Cx_DATA_REG_OFFSET((volatile u8t*)(iface));
+  // wait for end of transmission
+  while( !(((TWI_TypeDef*)iface)->TWCR & bitValue(TWINTx)) );
+
+  // return received data from TWDR
+  return ((TWI_TypeDef*)iface)->TWDR;
 }
 #endif

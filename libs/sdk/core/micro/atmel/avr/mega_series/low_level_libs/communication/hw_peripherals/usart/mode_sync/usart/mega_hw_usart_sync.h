@@ -18,7 +18,7 @@ public:
     void print(const char* str);
     void print(char c);
     void write(const char* buff, int size);
-    void readUntil(char *buffer, char chr);
+    void readUntil(char *buff, int size, char chr);
     void flush();
     bool isAvailable();
     char receive();

@@ -3,76 +3,78 @@
 #include <mega_hw_usart_sync_low_size.h>
 
 void usart_init(USART usart, HW_UART baud){
-				*UART_UBRRxL_REG_OFFSET((volatile u8t*)usart) = LO8(toU16(baud));
-				*UART_UBRRxH_REG_OFFSET((volatile u8t*)usart) = HI8(toU16(baud));
-    // Enable receiver and transmitter
-				*UART_UCSRxB_REG_OFFSET((volatile u8t*)usart) = setBitValue(1, RXENx) | setBitValue(1, TXENx);
-				//*UART_UCSRxB_REG_OFFSET((volatile u8t*)usart) = (1 << RXENx) | (1 << TXENx);
-    // Set format: 8data, 1stop bit
-    *UART_UCSRxC_REG_OFFSET((volatile u8t*)usart) = ASYNC_MODE | PARITY_DISABLED | EIGHT_BIT | ONE_STOP_BIT;
+
+  ((USART_TypeDef*)usart)->UBRRL = LO8(toU16(baud));
+  ((USART_TypeDef*)usart)->UBRRH = HI8(toU16(baud));
+
+  // Enable receiver and transmitter
+  ((USART_TypeDef*)usart)->UCSRB = setBitValue(1, RXENx) | setBitValue(1, TXENx);
+
+  // Set format: 8data, 1stop bit
+  ((USART_TypeDef*)usart)->UCSRC = ASYNC_MODE | PARITY_DISABLED | EIGHT_BIT | ONE_STOP_BIT;
 }
 
 char usart_receive(USART usart)
 {
-    return yanujz::getc((volatile u8t*)usart);
+  return yanujz::getc(usart);
 }
 
 
 bool usart_isAvailable(USART usart)
 {
-    return *(volatile u8t*)usart & bitValue(RXCx); // Return true means is available
-
+  return ((USART_TypeDef*)usart)->UCSRA & bitValue(RXCx); // Return true means is available
 }
 
 void usart_flush(USART usart)
 {
-    u8t dummy;
-    while(*(volatile u8t*)usart & bitValue(RXCx)){
-	dummy = *UART_UDRx_REG_OFFSET((volatile u8t*)usart);
-    }
+  u8 dummy;
+  while(((USART_TypeDef*)usart)->UCSRA & bitValue(RXCx)){
+	dummy = ((USART_TypeDef*)usart)->UDR;
+  }
 }
 
-void usart_readUntil(USART usart, char *buffer, char chr)
+void usart_readUntil(USART usart, char *buff, int size, char chr)
 {
-    u8t i = 0;
-    while (1) {
+  u8 i = 0;
+  while (size--) {
 	char temp = usart_receive(usart);
 	if(temp == chr){
-	    buffer[++i] ='\0';
-	    break;
+	  *buff ='\0';
+	  return;
 	}
-	buffer[i++] = temp;
-    }
+	*buff++ = temp;
+  }
+  *buff ='\0';
 }
 
 void usart_write(USART usart, const char *buff, int size)
 {
-    while (size--) {
-	yanujz::putc(*buff++, (volatile u8t*)usart);
-    }
+  while (size--) {
+	yanujz::putc(usart, *buff++);
+  }
 }
 
 void usart_print(USART usart, char c)
 {
-    yanujz::putc(c, (volatile u8t*)usart);
+  yanujz::putc(usart, c);
 }
 
 void usart_print(USART usart, const char *str)
 {
-    yanujz::puts(str, (volatile u8t*)usart);
+  yanujz::puts(usart, str);
 }
 
 void usart_printf(USART usart, const char *fmt, ...)
 {
-    va_list arg;
-    va_start(arg,fmt);
-    yanujz::vfprintf((volatile u8t*)usart, fmt, arg);
-    va_end(arg);
+  va_list arg;
+  va_start(arg,fmt);
+  yanujz::vfprintf(usart, fmt, arg);
+  va_end(arg);
 }
 
 void usart_end(USART usart)
 {
-    usart_flush(usart);
-    *UART_UCSRxB_REG_OFFSET((volatile u8t*)usart) &= ~(bitValue(RXENx) | bitValue(TXENx) | bitValue(RXCIEx) |	bitValue(TXCIEx));
+  usart_flush(usart);
+  ((USART_TypeDef*)usart)->UCSRB &= ~(bitValue(RXENx) | bitValue(TXENx) | bitValue(RXCIEx) |	bitValue(TXCIEx));
 }
 #endif
