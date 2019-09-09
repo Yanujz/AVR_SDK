@@ -1,4 +1,4 @@
-SDK_PATH = $(shell realpath ~/Documenti/GitHub/AVR_SDK)
+SDK_PATH = $(shell realpath ~/Documents/GitHub/AVR_SDK)
 ifeq ($(SDK_PATH), ) 
     $(error SDK_PATH do not exists, please set corret SDK_PATH into makefile)
 endif 
@@ -121,11 +121,11 @@ rawMonitor:
 
 # Update Qt Files	
 updateQtFiles:
-	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles"
+	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles $(shell dirname $(shell readlink Makefile))"
 
 # Update Qt Files	
 updateQtFiles_deploy:
-	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles deploy"
+	@bash -c ". $(TOOLS_DIR)/updateQtFiles/updateQtFiles $(shell dirname $(shell readlink Makefile)) deploy"
 
 # 
 createdir: $(BUILD_DIR) 

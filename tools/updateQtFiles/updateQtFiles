@@ -1,6 +1,7 @@
 #!/bin/bash
-SDK_PATH=$(realpath ~/Documenti/GitHub/AVR_SDK)
+#SDK_PATH=$(realpath ~/Documenti/GitHub/AVR_SDK)
 
+SDK_PATH=$1
  if [[ -z "${SDK_PATH}" ]]; then
       echo "SDK_PATH invalid!"
       exit;
@@ -26,7 +27,7 @@ case $(uname | tr '[:upper:]' '[:lower:]') in
 esac
 
 
-if [[ ! -z "$1" ]] && [[ "$1" == "deploy" ]]; then
+if [[ ! -z "$2" ]] && [[ "$2" == "deploy" ]]; then
   FILES=$(realpath $(find ${SDK_LIB_PATH} -name '*.h' -o  -name '*.cpp' -o  -name '*.c' -o  -name '*.hpp'))
 
 else

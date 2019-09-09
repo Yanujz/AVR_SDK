@@ -55,8 +55,8 @@ constexpr unsigned int toABS(int x){
 #define toReg(x) ((int*)x)
 //-------- Bit Manipulation --------//
 #define is_bit_on(var, bit) ((var)&(1<<(bit)))
-#define bitRead(value, bit) (((value) >> (bit)) & 0x01)
-#define bitSet(value, bit) ((value) |= (1 << (bit)))
+#define bitRead(value, bit) (((value >> bit) & 0x01))
+#define bitSet(value, bit) ((value |= (1 << bit)))
 #define bitClear(value, bit) ((value) &= ~(1 << bit) )
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 
