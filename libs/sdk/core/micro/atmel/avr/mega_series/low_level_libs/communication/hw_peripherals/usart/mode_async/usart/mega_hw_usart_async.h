@@ -50,6 +50,9 @@ public:
     void reset_tx_fifo();
     bool is_tx_fifo_empty();
 
+    void sendSync(u8 byte);
+    void sendSync(u8* byte, int size);
+
 protected:
     AsyncUsart();
     void init(HW_UART baud);

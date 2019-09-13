@@ -11,6 +11,8 @@ public:
   int get_tx_fifo_unread_element() override;
   bool is_tx_fifo_empty() override;
   void startAsyncSend() override;
+  void sendSync(u8 byte) override;
+  void sendSync(u8* byte, int size) override;
 protected:
   UsartAsyncStreamOut();
   AsyncUsart* asyncUsart;

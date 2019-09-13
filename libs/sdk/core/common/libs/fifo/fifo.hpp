@@ -50,7 +50,7 @@ namespace yanujz {
 		//return true;
 	    //}
 	    //return false;
-	    return _read_offset == _write_offset;
+	    return (_read_offset == _write_offset);
 	}
 	void setOverwrite(bool value){
 	    overwrite = value;

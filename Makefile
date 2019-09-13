@@ -62,7 +62,7 @@ INCLUDE_DIR := -I /usr/lib/avr/include \
 
 #
 CXX_FLAGS = -nostdlib -std=c++11 -Wmain -Wextra -fdata-sections -ffunction-sections \
-			-funsigned-char -Wno-expansion-to-defined -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
+			-funsigned-char -Wno-expansion-to-defined -funsigned-bitfields -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
 #
 CC_FLAGS  = -nostdlib -std=gnu99 -Wmain -Wextra -fdata-sections -ffunction-sections \
 			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
