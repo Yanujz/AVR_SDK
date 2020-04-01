@@ -5,6 +5,7 @@
 #include <hardware_spi.h>
 #include <hardware_i2c.h>
 #include <streams.h>
+#include "yanujz_core.h"
 //#include <crc_utils.h>
 //#include <console.h>
 
@@ -29,9 +30,25 @@ void txComplete(u8t  byte){
 }
 */
 
+cmd_t cmds[] = {
+    {"ls",          nullptr},
+    {"rm",          nullptr},
+    {"pwd",         nullptr},
+    {"cd",          nullptr},
+    {"mkdir",       nullptr},
+    {"reboot",      nullptr},
+    {"ifconfig",    nullptr},
+    {"cat",         nullptr},
+    {"tac",         nullptr},
+    {"nano",        nullptr},
+    // Machine cmds
+    {"dump_log",    nullptr}
+};
+
 
 int main()
 {
+
   sys_clock_init();
   u8t arr[] = {0xFF, 0xEE, 0xDD, 0xCC};
   //i2c_master_init(I2C0);

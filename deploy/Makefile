@@ -1,4 +1,4 @@
-SDK_PATH = $(shell realpath ~/Documenti/GitHub/AVR_SDK)
+SDK_PATH = $(shell realpath ~/Documents/GitHub/AVR_SDK)
 ifeq ($(SDK_PATH), ) 
     $(error SDK_PATH do not exists, please set corret SDK_PATH into makefile)
 endif 
@@ -42,7 +42,6 @@ CC  = avr-gcc-9.1.0
 
 #
 C_SRCS := $(shell find $(SRC_DIR)/ -type f -regex ".*\.c") 
-
 C_OBJS  = $(C_SRCS:.c=.o)
 
 #
@@ -52,6 +51,7 @@ CXX_OBJS  = $(CXX_SRCS:.cpp=.o)
 #
 ASM_SRCS  = $(shell find $(SRC_DIR)/ -type f -regex ".*\.s")
 ASM_OBJS  = $(ASM_SRCS:.s=.o)
+	
 
 #
 INCLUDE_DIR := -I /usr/lib/avr/include \
@@ -62,7 +62,7 @@ INCLUDE_DIR := -I /usr/lib/avr/include \
 
 #
 CXX_FLAGS = -nostdlib -std=c++11 -Wmain -Wextra -fdata-sections -ffunction-sections \
-			-funsigned-char -Wno-expansion-to-defined -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
+			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
 #
 CC_FLAGS  = -nostdlib -std=gnu99 -Wmain -Wextra -fdata-sections -ffunction-sections \
 			-funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -D__COMPILE__ -DF_CPU=$(F_CPU) -DBAUD=9600 -mmcu=$(MICRO) $(INCLUDE_DIR) 
